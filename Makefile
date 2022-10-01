@@ -10,7 +10,15 @@ SRC = main.c
 OBJ = ${SRC:.c=.o}
 DEP = ${SRC:.c=.d}
 
-main: ${OBJ}
+SRC_SOLVER = ./solver/libs/*.c main.c
+SOLVER_EXE = solver
+
+all: solver-build
+
+solver-build:
+	@${CC} ${CFLAGS} -c -o ${OBJ} ${SRC_SOLVER}
+	@${CC} ${OBJ} -lm -o ${SOLVER_EXE}
+
 
 -include ${DEP}
 
@@ -19,7 +27,6 @@ main: ${OBJ}
 clean:
 	${RM} ${OBJ}
 	${RM} ${DEP}
-	${RM} main
+	${RM} solver
 
 # END
-
