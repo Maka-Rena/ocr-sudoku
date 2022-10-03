@@ -12,7 +12,7 @@ void display_sudoku(char* s[], size_t size, char* file_name[])
     {
         for (size_t col = 0; col < size; col++)
         {
-            if (s[size*row + col] == )
+            // if (s[size*row + col] == )
         }
     }
 }

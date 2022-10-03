@@ -1,3 +1,3 @@
 #pragma once
 
-char* parser (char* file_path[]);
+void parser (char* file_path, int* sudok);

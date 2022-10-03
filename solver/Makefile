@@ -1,22 +1,24 @@
 #Makefile
 
 CC = gcc
-CPPFLAGS = -MMD
+CPPFLAGS =
 CFLAGS = -Wall -Wextra
 LDFLAGS =
 LDLIBS =
 SOLVER_DIR = solver
 
-SRC_SOLVER = ./include/*.c main.c
+SRC = ${wildcard ./includes/*.c} ${wildcard ./libs/*.c} ${wildcard main.c}
 OBJ = ${SRC:.c=.o}
-DEP = ${SRC:.c=.d}
 EXE = ${SRC:.c=}
 
-all:
-	${CC} ${CFLAGS} -c -o $ ${OBJ} ${SRC_SOLVER}
-	${CC} ${OBJ} -lm -o solver
+.PHONY: clean build all
 
-.PHONY: clean
+all: build
+
+build: ${OBJ}
+#@$(CC) -o $(SRC_SOLVER) $^ $(LDFLAGS) $(LDLIBS)
+#@$(CC) $(OBJ) -lm -o $(EXE)
+	@$(CC) -o main $^ $(LDFLAGS) $(LDLIBS)
 
 clean:
 	${RM} ${OBJ}
