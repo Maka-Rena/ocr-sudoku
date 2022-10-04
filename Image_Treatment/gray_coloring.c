@@ -6,7 +6,7 @@
 //
 // renderer: Renderer to draw on.
 // texture: Texture that contains the image.
-void draw(SDL_Renderer* renderer, SDL_Texture* texture)
+void Draw(SDL_Renderer* renderer, SDL_Texture* texture)
 {
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
@@ -18,7 +18,7 @@ void draw(SDL_Renderer* renderer, SDL_Texture* texture)
 // colored: Texture that contains the colored image.
 // grayscale: Texture that contains the grayscale image.
 //"SDL_Texture* colored" must be added as a paramter if we uncomment parts of the code 
-void event_loop(SDL_Renderer* renderer, SDL_Texture* grayscale) 
+void Event_loop(SDL_Renderer* renderer, SDL_Texture* grayscale) 
 {
     SDL_Event event;
     //SDL_Texture* t = colored;
@@ -37,7 +37,7 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* grayscale)
             case SDL_WINDOWEVENT:
                 if (event.window.event == SDL_WINDOWEVENT_RESIZED)
                 {
-                    draw(renderer, t);
+                    Draw(renderer, t);
                 }
                 break;
             /*case SDL_KEYDOWN :
@@ -60,7 +60,7 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* grayscale)
 // The format of the surface is SDL_PIXELFORMAT_RGB888.
 //
 // path: Path of the image.
-SDL_Surface* load_image(const char* path)
+SDL_Surface* Load_image(const char* path)
 {
     SDL_Surface* surface = IMG_Load(path);
     if (surface == NULL)
@@ -76,7 +76,7 @@ SDL_Surface* load_image(const char* path)
 //
 // pixel_color: Color of the pixel to convert in the RGB format.
 // format: Format of the pixel used by the surface.
-Uint32 pixel_to_grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
+Uint32 __Pixel_To_Grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
 {
     Uint8 r, g, b;
     SDL_GetRGB(pixel_color, format, &r, &g, &b);
@@ -87,7 +87,7 @@ Uint32 pixel_to_grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
     return color;
 }
 
-void surface_to_grayscale(SDL_Surface* surface)
+void Surface_To_Grayscale(SDL_Surface* surface)
 {
     Uint32* pixels = surface->pixels;
     if (pixels == NULL)
@@ -101,7 +101,7 @@ void surface_to_grayscale(SDL_Surface* surface)
     int count = 0;
     while (count < len)
     {
-        pixels[count] = pixel_to_grayscale(pixels[count], format);
+        pixels[count] = __Pixel_To_Grayscale(pixels[count], format);
         count++;
     }
     SDL_UnlockSurface(surface);
@@ -128,7 +128,7 @@ int main(int argc, char** argv)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
     // - Create a surface from the colored image.
-    SDL_Surface* surface = load_image(argv[1]);
+    SDL_Surface* surface = Load_image(argv[1]);
     if (surface == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
     // - Resize the window according to the size of the image.
@@ -140,21 +140,25 @@ int main(int argc, char** argv)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
     // - Convert the surface into grayscale.
-    surface_to_grayscale(surface);
+    Surface_To_Grayscale(surface);
 
     // - Create a new texture from the grayscale surface.
     SDL_Texture* texture_gray = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture_gray == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
-    
+
+    //to save the grayscale image in a png file
+    IMG_SavePNG(surface, "final_picture.png");
+
     // - Free the surface.
     SDL_FreeSurface(surface);
     
     // - Dispatch the events.
     //event_loop(renderer, texture, texture_gray);
-    event_loop(renderer, texture_gray);
+    Event_loop(renderer, texture_gray);
 
     // - Destroy the objects.
+
     
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

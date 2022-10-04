@@ -6,13 +6,13 @@ CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
 LDFLAGS =
 LDLIBS = `pkg-config --libs sdl2 SDL2_image`
 
-all: pre_processing
+all: gray_coloring
 
-SRC = pre_processing.c
+SRC = gray_coloring.c rotate.c
 OBJ = ${SRC:.c=.o}
 EXE = ${SRC:.c=}
 
-grayscale: pre_processing.o
+grayscale: gray_coloring.o
 
 .PHONY: clean
 
