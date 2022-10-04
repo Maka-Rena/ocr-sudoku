@@ -3,24 +3,21 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "./include/parser.h"
-//#include "./include/display.h"
-//#include "./include/solver.h"
+#include "./include/display.h"
+#include "./include/solver.h"
 
 int main(int argc, char** argv)
 {
     if (argc != 2)
-        errx(EXIT_FAILURE, "Usage: solver sudoku-path");
+        errx(EXIT_FAILURE, "Usage: ./solver \"sudoku-path\"");
 
     int *sudok = malloc(MAX_SIZE * sizeof(int));
     parser(argv[1], sudok);
-
-    for (size_t i = 0; i < 81; i++)
-    {
-        printf("%d", sudok[i]);
-        if (i+1 % 9 == 0)
-            printf("\n");
-    }
-    
+    display_sudoku(sudok);
+    printf("\n--- SOLVING SUDOKU ---\n\n");
+    if (solveSudoku(sudok, 0, 0) == 0)
+        errx(EXIT_FAILURE, "No solution exists for the sudoku.");
+    display_sudoku(sudok);
 
     return EXIT_SUCCESS;
 }

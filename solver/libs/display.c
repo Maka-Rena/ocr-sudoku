@@ -2,17 +2,20 @@
 #include <stdlib.h>
 #include <err.h>
 #include "../include/display.h"
+#define N 9
 
-void display_sudoku(char* s[], size_t size, char* file_name[])
+void display_sudoku(int* sudok)
 {
-    //Openning file to write the Sudoku
-    FILE *file = fopen(file_name, "w+");
-
-    for (size_t row = 0; row < size; row++)
+    for (int i = 0; i < N; i++)
     {
-        for (size_t col = 0; col < size; col++)
+        for (int j = 0; j < N; j++)
         {
-            // if (s[size*row + col] == )
+            printf("%d ", sudok[i*N+j]);
+            if (j == 2 || j == 5)
+                printf("| ");
         }
+        printf("\n");
+        if (i == 2 || i == 5)
+            printf("---------------------\n");
     }
 }

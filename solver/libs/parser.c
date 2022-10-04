@@ -17,15 +17,14 @@ void parser (char* file_path, int* sudok)
         switch (c)
         {
             case '.':
-                sudok[n] = 0;
+                sudok[n++] = 0;
                 break;
             case '\n':
                 break;
             case ' ':
                 break;
             default:
-                sudok[n] = c - '0';
+                sudok[n++] = c - '0';
         }
-        n++;
     }
 }
