@@ -5,28 +5,42 @@ CPPFLAGS = -MMD
 CFLAGS = -Wall -Wextra
 LDFLAGS =
 LDLIBS =
+RM = rm 
 
 SRC = main.c
 OBJ = ${SRC:.c=.o}
 DEP = ${SRC:.c=.d}
 
-SRC_SOLVER = ./solver/libs/*.c main.c
+SOLVER_OBJ = ${SOLVER_SRC:.c=.o}
+
+SOLVER_SRC = ./solver/libs/*.c main.c
 SOLVER_EXE = solver
+BUILD_DIR = build
+EXEC_TEXT = test
 
-all: solver-build
+all: build-solver
 
-solver-build:
+build-solver: $(SOVER_OBJ)
+	@mkdir -p $(BUILD_DIR)
 	@${CC} ${CFLAGS} -c -o ${OBJ} ${SRC_SOLVER}
-	@${CC} ${OBJ} -lm -o ${SOLVER_EXE}
+	@${CC} -o $(BUILD_DIR)/${SOLVER_EXE}
 
+build-test:
+	@mkdir -p $(BUILD_DIR)
+	@${CC} ${CFLAGS} -c -o ${OBJ} ${SRC}
+	@${CC} -o $(BUILD_DIR)/${EXEC_TEXT}
+
+test: build-test test-clean
+	@./${BUILD_DIR}/${EXEC_TEST}
 
 -include ${DEP}
 
 .PHONY: clean
 
 clean:
-	${RM} ${OBJ}
-	${RM} ${DEP}
-	${RM} solver
+	${RM} -rf ${BUILD_DIR}
+
+test-clean:
+	${RM} ${TEST_OBJ}
 
 # END
