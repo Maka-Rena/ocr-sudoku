@@ -1,5 +1,23 @@
 #include "../include/to_matrix.h"
 
+// Loads an image in a surface.
+// The format of the surface is SDL_PIXELFORMAT_RGB888.
+//
+// path: Path of the image.
+SDL_Surface* load_image(const char* path)
+{
+    SDL_Surface* tempsurface = IMG_Load(path);
+    if (tempsurface == NULL)
+        errx(EXIT_FAILURE, "%s", SDL_GetError());
+
+    SDL_Surface* surface = SDL_ConvertSurfaceFormat(tempsurface, SDL_PIXELFORMAT_RGB888, 0);
+    if (surface == NULL)
+        errx(EXIT_FAILURE, "%s", SDL_GetError());
+
+    SDL_FreeSurface(tempsurface);
+    return surface;
+}
+
 // Transform the pixel in an int : 0 for black end 1 for white.
 //
 // pixel_color: Color of the pixel to convert in the RGB format.

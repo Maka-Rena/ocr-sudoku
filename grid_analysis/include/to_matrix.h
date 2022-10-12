@@ -9,4 +9,6 @@
 
 
 int pixel_to_bin(Uint32 pixel_color, SDL_PixelFormat* format);
+SDL_Surface* load_image(const char* path);
+Matrix* surface_to_matrix(SDL_Surface* surface);
 
