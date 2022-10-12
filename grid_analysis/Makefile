@@ -18,11 +18,10 @@ all: build
 build: ${OBJ}
 #@$(CC) -o $(SRC_GRID_ANALYSIS) $^ $(LDFLAGS) $(LDLIBS)
 #@$(CC) $(OBJ) -lm -o $(EXE)
-	@$(CC) -o main $^ $(LDFLAGS) $(LDLIBS)
+	@$(CC) -o main_grid $^ $(LDFLAGS) $(LDLIBS)
 
 clean:
 	${RM} ${OBJ}
 	${RM} ${EXE}
-
 #End Makefile
 
