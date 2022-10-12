@@ -1,13 +1,13 @@
-#Makefile
+ #Makefile
 
 CC = gcc
 CPPFLAGS =
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra `pkg-config --cflags sdl2 SDL2_image `
 LDFLAGS =
-LDLIBS =
-SOLVER_DIR = solver
+LDLIBS = `pkg-config --libs sdl2 SDL2_image ` -lm
+SOLVER_DIR = grid_analysis
 
-SRC = ${wildcard ./includes/*.c} ${wildcard ./libs/*.c} ${wildcard main.c}
+SRC = ${wildcard ./includes/*.c} ${wildcard ./libs/*.c} ${wildcard ../libraries/matrix_lib/matrix.c} ${wildcard main_grid.c} #only file matrix.c to have only one main
 OBJ = ${SRC:.c=.o}
 EXE = ${SRC:.c=}
 
