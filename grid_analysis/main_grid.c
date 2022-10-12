@@ -10,6 +10,8 @@
 
 int main(int argc, char** argv)
 {
+    if (argc == 1)
+        errx(EXIT_FAILURE, "%s", "no arg");
     // Initializes the SDL.
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
@@ -19,6 +21,7 @@ int main(int argc, char** argv)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
     Matrix* matrix = surface_to_matrix(surface);
-    matrix_print(matrix);
-    EXIT_SUCCESS;
+    float ratio =  isd(matrix);
+    printf("%f",ratio);
+    return EXIT_SUCCESS;
 }
