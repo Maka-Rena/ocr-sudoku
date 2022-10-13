@@ -6,13 +6,14 @@ CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
 LDFLAGS =
 LDLIBS = `pkg-config --libs sdl2 SDL2_image`
 
-all: gray_coloring
+all: grayscale gaussian
 
-SRC = gray_coloring.c rotate.c
+SRC = grayscale.c gaussian.c
 OBJ = ${SRC:.c=.o}
 EXE = ${SRC:.c=}
 
-grayscale: gray_coloring.o
+grayscale: grayscale.o
+gaussian: gaussian.o
 
 .PHONY: clean
 
