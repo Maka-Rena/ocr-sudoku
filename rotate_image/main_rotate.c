@@ -14,6 +14,8 @@ int main(int argc, char **argv)
     SDL_Surface *image = IMG_Load(argv[1]);
     //Create rotated surface with the same size as the original
     SDL_Surface *rotated = SDL_CreateRGBSurface(0, image->w, image->h, 32, 0, 0, 0, 0);
+    SDL_FillRect(rotated, NULL, SDL_MapRGB(rotated->format, 255, 255, 255));
+
 
     //Convert the pixel format to RGBA32
     image = SDL_ConvertSurfaceFormat(image, SDL_PIXELFORMAT_RGBA32, 0);
