@@ -141,11 +141,11 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
                     0.125, 0.25, 0.125, 
                     0.0625, 0.125 , 0.0625};
     */
-    float kernel[] = {1, 1, 1,
+    uint kernel[] = {1, 1, 1,
                     1, 1, 1, 
                     1, 1, 1};
     //2ND STEP : ACCESSING EVERY PIXELS
-    float res = 0;
+    uint res = 0;
     int i = 0;
     while (i < h) 
     {
@@ -154,24 +154,27 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
         {
             res = 0;
             //printf("row = %i and column = %i \n", i, j);
-            float number_of_box = 0;
-
+            uint number_of_box = 0;
+	
             //accessing top left corner :
             int destination = (i-1)*w+(j-1);
             if (destination >= 0 && destination < length)  
             {
-                res = res + pixels[destination] * kernel[0]; 
+		Uint8 r,g,b;
+		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                number_of_box++; 
-                printf("%d, %f, \n", pixels[destination], res);
+                res = res + r * kernel[1]; 
+                number_of_box++;
             }
 
             //accessing top corner :
             destination = (i-1)*w+j;
             if (destination >= 0 && destination < length)  
             {
+		Uint8 r,g,b;
+		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + pixels[destination] * kernel[1]; 
+                res = res + r * kernel[1]; 
                 number_of_box++;
             }
 
@@ -179,7 +182,10 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
             destination = (i-1)*w+(j+1);
             if (destination >= 0 && destination < length)  
             {
-                res = res + pixels[destination] * kernel[2]; 
+		Uint8 r,g,b;
+		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
+
+                res = res + r * kernel[1]; 
                 number_of_box++;
             }
            
@@ -187,7 +193,10 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
             destination = i*w+(j-1);
             if (destination >= 0 && destination < length)  
             {
-                res = res + pixels[destination] * kernel[3]; 
+		Uint8 r,g,b;
+		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
+
+                res = res + r * kernel[1]; 
                 number_of_box++;
             }
            
@@ -195,7 +204,10 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
             destination = i*w+j;
             if (destination >= 0 && destination < length)  
             {
-                res = res + pixels[destination] * kernel[4]; 
+		Uint8 r,g,b;
+		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
+
+                res = res + r * kernel[1]; 
                 number_of_box++;
             }
            
@@ -203,7 +215,10 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
             destination = i*w+(j+1);
             if (destination >= 0 && destination < length)  
             {
-                res = res + pixels[destination] * kernel[5]; 
+		Uint8 r,g,b;
+		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
+
+                res = res + r * kernel[1]; 
                 number_of_box++;
             }
            
@@ -211,7 +226,10 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
             destination = (i+1)*w+(j-1);
             if (destination >= 0 && destination < length)  
             {
-                res = res + pixels[destination] * kernel[6]; 
+		Uint8 r,g,b;
+		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
+
+                res = res + r * kernel[1]; 
                 number_of_box++;
             }
 
@@ -219,7 +237,10 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
             destination = (i+1)*w+j;
             if (destination >= 0 && destination < length)  
             {
-                res = res + pixels[destination] * kernel[7]; 
+		Uint8 r,g,b;
+		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
+
+                res = res + r * kernel[1]; 
                 number_of_box++;
             }
 
@@ -227,13 +248,17 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
             destination = (i+1)*w+(j+1);
             if (destination >= 0 && destination < length)  
             {
-                res = res + pixels[destination] * kernel[8]; 
+		Uint8 r,g,b;
+		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
+
+                res = res + r * kernel[1]; 
                 number_of_box++;
             }
 
             if (number_of_box != 0)
             {
-                result[i*w+j] = ((Uint32) res)/((Uint32) number_of_box); 
+		uint newcolor = res / number_of_box;
+                result[i*w+j] = SDL_MapRGB(format, newcolor, newcolor, newcolor); 
                 //printf("res = %f, number_of_box = %f, result = %f\n", res, number_of_box, result[i*w+j]);
             }
             
