@@ -56,7 +56,7 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* textu
     }
 }
 
-//load the image that is already gray
+//load the image that is already gray and blurred
 SDL_Surface* Load_image(const char* path) 
 {
     SDL_Surface* surface = IMG_Load(path);
@@ -69,10 +69,7 @@ SDL_Surface* Load_image(const char* path)
     return res;
 }
 
-
-
-//draw the blurred surface from the kernel convulution
-void __Blurring_process(SDL_Surface* surface, Uint32* result)
+void __NEXT_STEP_TO_IMPLEMENT(SDL_Surface* surface, Uint32* resultgradient)//, Uint32* resultangle) 
 {
     Uint32* pixels = surface->pixels;
     if (pixels == NULL)
@@ -86,22 +83,15 @@ void __Blurring_process(SDL_Surface* surface, Uint32* result)
     int count = 0;
     while (count < len)
     {
-        Uint32 color = result[count];
+        Uint32 color = resultgradient[count];
         pixels[count] = SDL_MapRGB(format, color, color, color);
         count++;
     }
     SDL_UnlockSurface(surface);
 }
 
-/*function to find the new surface to draw :
-    Traverse every pixel of the surface
-    For the 8 neighbors and the pixel :
-    - The function will take each of the neighbors 
-        do a multiplication with the kernel placed at the same position
-        add every multiplication
-        Divide by the sum boxes encountered (usually 9 except in the borders)
-    It will then called the function to do the drawing of the new surface 
-*/
+
+
 void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 {
     /*
@@ -126,151 +116,190 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
     SDL_LockSurface(surface); 
-    Uint32 result[w*h]; 
+    Uint32 result_gradient[w*h];
 
+    //Uint32 result_angle[w*h]; this variable is used to know the exact angle of an edge for every pixel
 
-    /*
-    This is the basic kernel for implementation of 3*3
+    uint kernelx[] = {-1, 0, 1,
+                    -2, 0, 2, 
+                    -1, 0, 1};
     
-     float kernel[] = {1, 1, 1,
-                    1, 1, 1, 
-                    1, 1, 1};
+    uint kernely[] = {-1, -2, 1,
+                    0, 0, 0, 
+                    1, 2, 1};
     
     
-    float kernel[] = {0.0625, 0.125, 0.0625,
-                    0.125, 0.25, 0.125, 
-                    0.0625, 0.125 , 0.0625};
-    */
-    uint kernel[] = {1, 1, 1,
-                    1, 1, 1, 
-                    1, 1, 1};
+    
     //2ND STEP : ACCESSING EVERY PIXELS
-    uint res = 0;
+    uint resx = 0;
+    uint resy = 0;
     int i = 0;
     while (i < h) 
     {
         int j = 0;
         while (j < w)
         {
-            res = 0;
-            //printf("row = %i and column = %i \n", i, j);
-            uint number_of_box = 0;
-	
-            //accessing top left corner :
-            int destination = (i-1)*w+(j-1);
+            resx = 0;
+            resy = 0;
+    
+            uint number_of_boxx = 0;
+            uint number_of_boxy = 0;
+            
+            //FOR G(X):
+
+            //accessing left :
+            int destination = i*w+(j-1);
             if (destination >= 0 && destination < length)  
             {
-		        Uint8 r,g,b;
+                Uint8 r,g,b;
 		        SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[0]; 
-                number_of_box++;
+                resx = resx + r * kernelx[3]; 
+                number_of_boxx++;
+            }
+           
+           
+            //accessing right :
+            destination = i*w+(j+1);
+            if (destination >= 0 && destination < length)  
+            {
+                Uint8 r,g,b;
+		        SDL_GetRGB(pixels[destination], format, &r, &g, &b);
+
+                resx = resx + r * kernelx[5]; 
+                number_of_boxx++;
+
             }
 
-            //accessing top corner :
+
+            //FOR G(Y):
+
+            //accessing top:
+            
             destination = (i-1)*w+j;
             if (destination >= 0 && destination < length)  
             {
-		        Uint8 r,g,b;
+                Uint8 r,g,b;
 		        SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[1]; 
-                number_of_box++;
+                resy = resy + r * kernely[1]; 
+                number_of_boxy++;
+
+            }
+            //accessing bottom :
+        
+            destination = (i+1)*w+j;
+            if (destination >= 0 && destination < length)  
+            {
+                Uint8 r,g,b;
+		        SDL_GetRGB(pixels[destination], format, &r, &g, &b);
+
+                resy = resy + r * kernely[7]; 
+                number_of_boxy++;
+
+            }
+
+
+
+            //FOR BOTH G(X) and G(Y):
+
+
+            //accessing top left corner :
+            destination = (i-1)*w+(j-1);
+            if (destination >= 0 && destination < length)  
+            {
+                Uint8 r,g,b;
+		        SDL_GetRGB(pixels[destination], format, &r, &g, &b);
+
+                resy = resy + r * kernely[0]; 
+                resx = resx + r * kernelx[0]; 
+                
+                number_of_boxy++;
+                number_of_boxx++;
+
             }
 
             //accessing top right corner :
             destination = (i-1)*w+(j+1);
             if (destination >= 0 && destination < length)  
             {
-		        Uint8 r,g,b;
+                Uint8 r,g,b;
 		        SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[2]; 
-                number_of_box++;
+                resy = resy + r * kernely[2]; 
+                resx = resx + r * kernelx[2]; 
+                
+                number_of_boxy++;
+                number_of_boxx++;
             }
            
-            //accessing left :
-            destination = i*w+(j-1);
-            if (destination >= 0 && destination < length)  
-            {
-		        Uint8 r,g,b;
-		        SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-                res = res + r * kernel[3]; 
-                number_of_box++;
-            }
-           
-            //accessing center :
-            destination = i*w+j;
-            if (destination >= 0 && destination < length)  
-            {
-		        Uint8 r,g,b;
-		        SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-                res = res + r * kernel[4]; 
-                number_of_box++;
-            }
-           
-            //accessing right :
-            destination = i*w+(j+1);
-            if (destination >= 0 && destination < length)  
-            {
-		        Uint8 r,g,b;
-		        SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-                res = res + r * kernel[5]; 
-                number_of_box++;
-            }
+            
            
             //accessing bottom left corner :
             destination = (i+1)*w+(j-1);
             if (destination >= 0 && destination < length)  
             {
-		        Uint8 r,g,b;
+                Uint8 r,g,b;
 		        SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[6]; 
-                number_of_box++;
-            }
-
-            //accessing bottom corner :
-            destination = (i+1)*w+j;
-            if (destination >= 0 && destination < length)  
-            {
-		        Uint8 r,g,b;
-		        SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-                res = res + r * kernel[7]; 
-                number_of_box++;
+                resy = resy + r * kernely[6]; 
+                resx = resx + r * kernelx[6]; 
+                
+                number_of_boxy++;
+                number_of_boxx++;
+                
+		        
             }
 
             //accessing bottom right corner :
             destination = (i+1)*w+(j+1);
             if (destination >= 0 && destination < length)  
             {
-		        Uint8 r,g,b;
+                Uint8 r,g,b;
 		        SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[8]; 
-                number_of_box++;
+                resy = resy + r * kernely[8]; 
+                resx = resx + r * kernelx[8]; 
+                
+                number_of_boxy++;
+                number_of_boxx++;
             }
 
-            if (number_of_box != 0)
+            if (number_of_boxx != 0)
             {
-		uint newcolor = res / number_of_box;
-                result[i*w+j] = SDL_MapRGB(format, newcolor, newcolor, newcolor); 
-                //printf("res = %f, number_of_box = %f, result = %f\n", res, number_of_box, result[i*w+j]);
+                if (number_of_boxy != 0)
+                {
+                    result_gradient[i*w+j] = pow((pow(resx,2) + pow(resy,2)), 1/2); //sqrt doesn't work so we use the power of 1/2
+
+                    //result_angle[i*w+j] = atan(resy/resx); //atan = arctan function in C
+                }
+                else
+                {
+                    result_gradient[i*w+j] = pow((pow(resx,2)),1/2);
+
+                    //result_angle[i*w+j] = atan(0); //atan(resy/resx) = atan(0) since resy will be equal to 0
+                }
+                
+                j++;
+            }
+            else
+            {
+                if (number_of_boxy != 0)
+                {
+                    result_gradient[i*w+j] = pow((pow(resy,2)),1/2);  
+                    //result_angle[i*w+j] = atan(0); //atan(resy/resx) = atan(0) since division by 0;
+                }
+                j++;
             }
             
-
-            j++;
+            
         }
         
         i++;
     }
-    __Blurring_process(surface, result);
+    __NEXT_STEP_TO_IMPLEMENT(surface, result_gradient);//, result_angle);
 }
-    
+
 
 
 
