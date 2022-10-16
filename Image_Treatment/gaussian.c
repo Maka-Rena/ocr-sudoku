@@ -15,7 +15,7 @@ void draw(SDL_Renderer* renderer, SDL_Texture* texture)
 
 // Event loop that calls the relevant event handler.
 //
-// renderer: Renderer to draw on.
+// renderer:Renderer to draw on.
 // colored: Texture that contains the colored image.
 // texture_blurred: Texture that contains the blurred image.
 void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* texture_blurred)
@@ -162,8 +162,9 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
             {
 		Uint8 r,g,b;
 		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-                res = res + r * kernel[1]; 
+		
+		uint average = 0.3*r+ 0.59*g + 0.11*b;
+                res = res + average * kernel[0]; 
                 number_of_box++;
             }
 
@@ -174,7 +175,9 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 		Uint8 r,g,b;
 		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[1]; 
+		uint average = 0.3*r+ 0.59*g + 0.11*b;
+                res = res + average * kernel[1]; 
+
                 number_of_box++;
             }
 
@@ -185,7 +188,8 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 		Uint8 r,g,b;
 		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[1]; 
+		uint average = 0.3*r+ 0.59*g + 0.11*b;
+                res = res + average * kernel[2]; 
                 number_of_box++;
             }
            
@@ -196,7 +200,8 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 		Uint8 r,g,b;
 		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[1]; 
+		uint average = 0.3*r+ 0.59*g + 0.11*b;
+                res = res + average * kernel[3]; 
                 number_of_box++;
             }
            
@@ -207,7 +212,8 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 		Uint8 r,g,b;
 		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[1]; 
+		uint average = 0.3*r+ 0.59*g + 0.11*b;
+                res = res + average * kernel[4]; 
                 number_of_box++;
             }
            
@@ -218,7 +224,8 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 		Uint8 r,g,b;
 		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[1]; 
+		uint average = 0.3*r+ 0.59*g + 0.11*b;
+                res = res + average * kernel[5]; 
                 number_of_box++;
             }
            
@@ -229,7 +236,8 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 		Uint8 r,g,b;
 		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[1]; 
+		uint average = 0.3*r+ 0.59*g + 0.11*b;
+                res = res + average * kernel[6]; 
                 number_of_box++;
             }
 
@@ -240,7 +248,8 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 		Uint8 r,g,b;
 		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[1]; 
+		uint average = 0.3*r+ 0.59*g + 0.11*b;
+                res = res + average * kernel[7]; 
                 number_of_box++;
             }
 
@@ -251,7 +260,8 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 		Uint8 r,g,b;
 		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
-                res = res + r * kernel[1]; 
+		uint average = 0.3*r+ 0.59*g + 0.11*b;
+                res = res + average * kernel[8]; 
                 number_of_box++;
             }
 
