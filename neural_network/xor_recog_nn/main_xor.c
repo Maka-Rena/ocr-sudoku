@@ -129,7 +129,7 @@ int main()
         }
         error_hidden_layer->entries[j][0] = err*dsigmoid(hidden_layer_output -> entries[j][0]);
     }
-    matrix_print(error_hidden_layer);
+    matrix_print(error_hidden_layer);//NEED TO VERIFY THE RESULT
 
 
 }
