@@ -3,7 +3,7 @@
 CC = gcc
 CPPFLAGS =
 CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
-LDFLAGS =
+LDFLAGS = -lm
 LDLIBS = `pkg-config --libs sdl2 SDL2_image`
 
 all: grayscale gaussian sobel
