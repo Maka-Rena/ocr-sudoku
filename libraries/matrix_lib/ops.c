@@ -41,7 +41,7 @@ Matrix* add(Matrix *m1, Matrix *m2)
     }
 }
 
-Matrix* subtract(Matrix *m1, Matrix *m2) 
+Matrix* substract(Matrix *m1, Matrix *m2) 
 {
     if (check_dimensions(m1, m2)) {
         Matrix *m = matrix_create(m1->rows, m1->cols);
