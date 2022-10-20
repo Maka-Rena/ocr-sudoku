@@ -22,7 +22,7 @@ double sigmoid(double x)
  * return value of backpropagation*/
 double dsigmoid(double x)
 {
-    return x * (1 - x);
+    return x * (1.0 - x);
 }
 
 /* Function to initialize weights and biases with random values */
@@ -46,7 +46,7 @@ int main()
     expected_outputs -> entries[2][0] = 1.0f;
 
     //matrix_print(inputs);
-    //matrix_print(expected_outputs);
+    matrix_print(expected_outputs);
 
     //Initializing hidden weights biases with random values
     Matrix *hidden_weights = matrix_create(inputLayerNeurons,hiddenLayerNeurons);//OK
@@ -59,9 +59,11 @@ int main()
     //Initializing output weights and biases with random values
     Matrix *output_weights = matrix_create(hiddenLayerNeurons,outputLayerNeurons);//OK
     matrix_randomize(output_weights,outputLayerNeurons);
+    printf("output_weights :\n");
     matrix_print(output_weights);
     Matrix *output_biases = matrix_create(1,outputLayerNeurons);
     matrix_randomize(output_biases,outputLayerNeurons);
+    printf("output_biases :\n");
     matrix_print(output_biases);
 
     // Activation of hidden Layer
@@ -94,7 +96,7 @@ int main()
     for(int j = 0; j < output_layer_activation->rows; j++)
         for(int i = 0; i < output_biases->cols; i++)
             output_layer_activation->entries[j][i] = output_layer_activation->entries[j][i] + output_biases->entries[0][i];
-    printf("output_layer_activation :\n");
+    printf("output_layer_activation after addition:\n");
     matrix_print(output_layer_activation);
     Matrix *predicted_output = matrix_create(output_layer_activation->rows,output_layer_activation->cols);
     predicted_output = apply(sigmoid,output_layer_activation);
@@ -102,5 +104,32 @@ int main()
     matrix_print(predicted_output);
 
     //BackPropagation:
+    //We first compute the error
+    Matrix* error = substract(expected_outputs, predicted_output);
+    printf("error :\n");
+    matrix_print(error);
+   
+    Matrix *predicted_output_dsigmoided = matrix_create(predicted_output->rows, predicted_output->cols);
+    predicted_output_dsigmoided = apply(dsigmoid, predicted_output);
+    printf("dsigmoid predicted_output :\n");
+    matrix_print(predicted_output_dsigmoided);
+    Matrix *d_predicted_output = multiply(error, predicted_output_dsigmoided);
+    printf("d_predicted_output :\n");
+    matrix_print(d_predicted_output);
+
+    Matrix *error_hidden_layer = matrix_create(hiddenLayerNeurons,1);
+    printf("error_hidden_layer :\n");
+    matrix_print(error_hidden_layer);
+    for(int j = 0; j < error_hidden_layer->rows; j++)
+    {
+        double err = 0.0f;
+        for(int k = 0; k < outputLayerNeurons; k++)
+        {
+            err+= d_predicted_output->entries[k][0]*output_weights->entries[j][k];
+        }
+        error_hidden_layer->entries[j][0] = err*dsigmoid(hidden_layer_output -> entries[j][0]);
+    }
+    matrix_print(error_hidden_layer);
+
 
 }
