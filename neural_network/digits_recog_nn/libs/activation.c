@@ -1,6 +1,6 @@
 #include <math.h>
 #include "activation.h"
-#include "ops.h"
+#include "../libraries/matrix/ops.h"
 
 double sigmoid(double x)
 {
