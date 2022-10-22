@@ -3,6 +3,20 @@
 #include <SDL2/SDL_image.h>
 #include <math.h>
 
+//Find the max in the list 
+//used for resizing the datas
+float find_max(float list[], int len)
+{
+     int max = 0;
+     for(int i = 0; i < len; i++)
+     {
+		if (list[i] > max)
+	    	max = list[i];
+     }
+     return max;
+}
+
+
 // Updates the display.
 //
 // renderer: Renderer to draw on.
@@ -115,8 +129,11 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
     if (format == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
-    SDL_LockSurface(surface); 
-    Uint32 result_gradient[w*h];
+    SDL_LockSurface(surface);
+
+	//Create the lists to stock gradients 
+    float result_gradient[w*h];
+	Uint32 colored_gradient[w*h];
 
     //Uint32 result_angle[w*h]; this variable is used to know the exact angle of an edge for every pixel
 
@@ -247,7 +264,8 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 
             }
 
-            result_gradient[i*w+j] = (Uint32) sqrt((pow(resy,2))+pow(resx,2));
+            result_gradient[i*w+j] = sqrt((pow(resy,2))+pow(resx,2));
+	    	
             //result_angle[i*w+j] = atan(0); //atan(resy/resx) = atan(0) since division by 0;
 
             j++;
@@ -256,7 +274,16 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 
         i++;
     }
-    __NEXT_STEP_TO_IMPLEMENT(surface, result_gradient);//, result_angle);
+
+	int max = find_max(result_gradient,w*h); //find the max
+
+	//resizing all datas
+
+	for(int i=0; i<w*h; i++)
+	{
+		colored_gradient[i] = (Uint32)((result_gradient[i]/max)*255);
+	}
+    __NEXT_STEP_TO_IMPLEMENT(surface, colored_gradient);//, result_angle);
 }
 
 
@@ -300,7 +327,7 @@ int main(int argc, char** argv)
     if (SDL_QueryTexture(texture, NULL, NULL, &w, &h) != 0)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
-    Kernel_Convolution(surface, w, h);
+    Kernel_Convolution(surface,w,h);
 
     //Create texture from the blurred surface
     SDL_Texture* texture_blurred = SDL_CreateTextureFromSurface(renderer, surface);
