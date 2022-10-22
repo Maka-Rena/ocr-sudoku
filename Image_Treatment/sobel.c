@@ -83,7 +83,7 @@ SDL_Surface* Load_image(const char* path)
     return res;
 }
 
-void __NEXT_STEP_TO_IMPLEMENT(SDL_Surface* surface, Uint32* resultgradient)//, Uint32* resultangle) 
+void __sobel_transformation(SDL_Surface* surface, Uint32* resultgradient)//, Uint32* resultangle) 
 {
     Uint32* pixels = surface->pixels;
     if (pixels == NULL)
@@ -103,6 +103,7 @@ void __NEXT_STEP_TO_IMPLEMENT(SDL_Surface* surface, Uint32* resultgradient)//, U
         if (color <= 100)
             pixels[count] = SDL_MapRGB(format, 0, 0, 0);
         else
+
             pixels[count] = SDL_MapRGB(format, 255, 255, 255);
         count++;
     }
@@ -271,7 +272,7 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 
             result_gradient[i*w+j] = sqrt((pow(resy,2))+pow(resx,2));
 	    	
-            //result_angle[i*w+j] = atan(0); //atan(resy/resx) = atan(0) since division by 0;
+            //result_angle[i*w+j] = atan(resy/resx); 
 
             j++;
 
@@ -287,8 +288,9 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
 	for(int i=0; i<w*h; i++)
 	{
 		colored_gradient[i] = (Uint32)((result_gradient[i]/max)*255);
+        //angle_gradient[i] = (Uint32)(result_angle[i]/max)*255;
 	}
-    __NEXT_STEP_TO_IMPLEMENT(surface, colored_gradient);//, result_angle);
+    __sobel_transformation(surface, colored_gradient);//, angle_gradient);
 }
 
 
