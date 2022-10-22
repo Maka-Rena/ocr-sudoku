@@ -98,7 +98,12 @@ void __NEXT_STEP_TO_IMPLEMENT(SDL_Surface* surface, Uint32* resultgradient)//, U
     while (count < len)
     {
         Uint32 color = resultgradient[count];
-        pixels[count] = SDL_MapRGB(format, color, color, color);
+        //<= 50 works for non grayscaled images
+        //<= 100 for grayscaled and blurred
+        if (color <= 100)
+            pixels[count] = SDL_MapRGB(format, 0, 0, 0);
+        else
+            pixels[count] = SDL_MapRGB(format, 255, 255, 255);
         count++;
     }
     SDL_UnlockSurface(surface);
