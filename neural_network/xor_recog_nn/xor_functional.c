@@ -9,7 +9,7 @@
 #define hiddenLayerNeurons 2
 #define outputLayerNeurons 1
 #define epochs 100000
-#define learning_rate 0.2f
+#define learning_rate 0.1f
 /* Sigmoid function
  * x is the activation input
  * returns the activation value */
