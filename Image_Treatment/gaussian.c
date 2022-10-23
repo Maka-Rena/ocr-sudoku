@@ -47,10 +47,10 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* textu
                     t = texture_blurred;
                 }
                 else
-                    {
-                        draw(renderer, colored);
-                        t = colored;
-                    }
+                {
+                    draw(renderer, colored);
+                    t = colored;
+                }
                 break;
         }
     }
@@ -70,7 +70,6 @@ SDL_Surface* Load_image(const char* path)
 }
 
 
-
 //draw the blurred surface from the kernel convulution
 void __Blurring_process(SDL_Surface* surface, Uint32* result)
 {
@@ -86,7 +85,7 @@ void __Blurring_process(SDL_Surface* surface, Uint32* result)
     int count = 0;
     while (count < len)
     {
-        Uint32 color = result[count];
+        uint color = result[count];
         pixels[count] = SDL_MapRGB(format, color, color, color);
         count++;
     }
@@ -102,15 +101,21 @@ void __Blurring_process(SDL_Surface* surface, Uint32* result)
         Divide by the sum boxes encountered (usually 9 except in the borders)
     It will then called the function to do the drawing of the new surface 
 */
-void Kernel_Convolution(SDL_Surface* surface, int w, int h)
+void Kernel_Convolution(SDL_Surface* surface)
 {
+	//Stocking the width, height, len and array for the results
+
+	int w = surface->w;
+	int h = surface->h;
+    int length = surface->w * surface->h;
+    Uint32 result[length]; 
+
     /*
         Formula to acces values in array :
         i * WIDTH + j
     */
 
     /*
-        Creating an array to store the result
         Creating the array for the pixel
         Getting the length 
         Getting the format
@@ -120,13 +125,11 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
     if (pixels == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
     
-    int length = surface->w * surface->h;
     SDL_PixelFormat* format = surface->format;
     if (format == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
     SDL_LockSurface(surface); 
-    Uint32 result[w*h]; 
 
 
     /*
@@ -136,10 +139,10 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
                     1, 1, 1, 
                     1, 1, 1};
     
-    
-    float kernel[] = {0.0625, 0.125, 0.0625,
-                    0.125, 0.25, 0.125, 
-                    0.0625, 0.125 , 0.0625};
+    */
+    /*uint kernel[] = {1, 2, 1,
+                    2, 4, 2, 
+                    1, 2 , 1};
     */
     uint kernel[] = {1, 1, 1,
                     1, 1, 1, 
@@ -153,126 +156,32 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
         while (j < w)
         {
             res = 0;
-            //printf("row = %i and column = %i \n", i, j);
             uint number_of_box = 0;
-	
-            //accessing top left corner :
-            int destination = (i-1)*w+(j-1);
-            if (destination >= 0 && destination < length)  
-            {
-		Uint8 r,g,b;
-		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
+
+			//testing all pixels around
+			for (int y = -1; y<2;y++)
+			{
+				for (int x = -1; x<2;x++)
+				{
+            		int destination = (i+y)*w+(j+x);
+            		if (destination >= 0 && destination < length)  
+            		{
+						Uint8 r,g,b;
+						SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 		
-		uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[0]; 
-                number_of_box++;
-            }
-
-            //accessing top corner :
-            destination = (i-1)*w+j;
-            if (destination >= 0 && destination < length)  
-            {
-		Uint8 r,g,b;
-		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-		uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[1]; 
-
-                number_of_box++;
-            }
-
-            //accessing top right corner :
-            destination = (i-1)*w+(j+1);
-            if (destination >= 0 && destination < length)  
-            {
-		Uint8 r,g,b;
-		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-		uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[2]; 
-                number_of_box++;
-            }
-           
-            //accessing left :
-            destination = i*w+(j-1);
-            if (destination >= 0 && destination < length)  
-            {
-		Uint8 r,g,b;
-		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-		uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[3]; 
-                number_of_box++;
-            }
-           
-            //accessing center :
-            destination = i*w+j;
-            if (destination >= 0 && destination < length)  
-            {
-		Uint8 r,g,b;
-		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-		uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[4]; 
-                number_of_box++;
-            }
-           
-            //accessing right :
-            destination = i*w+(j+1);
-            if (destination >= 0 && destination < length)  
-            {
-		Uint8 r,g,b;
-		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-		uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[5]; 
-                number_of_box++;
-            }
-           
-            //accessing bottom left corner :
-            destination = (i+1)*w+(j-1);
-            if (destination >= 0 && destination < length)  
-            {
-		Uint8 r,g,b;
-		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-		uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[6]; 
-                number_of_box++;
-            }
-
-            //accessing bottom corner :
-            destination = (i+1)*w+j;
-            if (destination >= 0 && destination < length)  
-            {
-		Uint8 r,g,b;
-		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-		uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[7]; 
-                number_of_box++;
-            }
-
-            //accessing bottom right corner :
-            destination = (i+1)*w+(j+1);
-            if (destination >= 0 && destination < length)  
-            {
-		Uint8 r,g,b;
-		SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-		uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[8]; 
-                number_of_box++;
-            }
+						uint average = 0.3*r+ 0.59*g + 0.11*b;
+                		res = res + average * kernel[0]; 
+                		number_of_box++;
+            		}
+				}
+			}
 
             if (number_of_box != 0)
             {
-		uint newcolor = res / number_of_box;
-                result[i*w+j] = SDL_MapRGB(format, newcolor, newcolor, newcolor); 
-                //printf("res = %f, number_of_box = %f, result = %f\n", res, number_of_box, result[i*w+j]);
-            }
-            
-
+				uint newcolor = res / number_of_box;
+            	result[i*w+j] = SDL_MapRGB(format, newcolor, newcolor, newcolor); 
+            	//printf("res = %f, number_of_box = %f, result = %f\n", res, number_of_box, result[i*w+j]);
+			}
             j++;
         }
         
@@ -317,19 +226,13 @@ int main(int argc, char** argv)
     if (texture == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
     
-    //get the height of the texture
-    int w, h;
-    if (SDL_QueryTexture(texture, NULL, NULL, &w, &h) != 0)
-        errx(EXIT_FAILURE, "%s", SDL_GetError());
-    
-    Kernel_Convolution(surface, w, h);
+    //Blur the picture
+    Kernel_Convolution(surface);
 
     //Create texture from the blurred surface
     SDL_Texture* texture_blurred = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture_blurred == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
-
-
 
     //to save the blurred image in a png file
     IMG_SavePNG(surface, "final_picture.png");
@@ -341,8 +244,7 @@ int main(int argc, char** argv)
     // - Dispatch the events.
     event_loop(renderer, texture, texture_blurred);
 
-    // - Destroy the objects.
-    
+    // - Destroy the objects.    
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_DestroyTexture(texture);
