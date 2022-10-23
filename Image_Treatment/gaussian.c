@@ -107,8 +107,8 @@ void Kernel_Convolution(SDL_Surface* surface)
 
 	int w = surface->w;
 	int h = surface->h;
-    uint result[w*h]; 
     int length = surface->w * surface->h;
+    Uint32 result[length]; 
 
     /*
         Formula to acces values in array :
@@ -140,13 +140,13 @@ void Kernel_Convolution(SDL_Surface* surface)
                     1, 1, 1};
     
     */
-    uint kernel[] = {1, 2, 1,
+    /*uint kernel[] = {1, 2, 1,
                     2, 4, 2, 
                     1, 2 , 1};
-    
-    /*uint kernel[] = {1, 1, 1,
+    */
+    uint kernel[] = {1, 1, 1,
                     1, 1, 1, 
-                    1, 1, 1};*/
+                    1, 1, 1};
     //2ND STEP : ACCESSING EVERY PIXELS
     uint res = 0;
     int i = 0;
@@ -156,117 +156,25 @@ void Kernel_Convolution(SDL_Surface* surface)
         while (j < w)
         {
             res = 0;
-            //printf("row = %i and column = %i \n", i, j);
             uint number_of_box = 0;
-	
-            //accessing top left corner :
-            int destination = (i-1)*w+(j-1);
-            if (destination >= 0 && destination < length)  
-            {
-				Uint8 r,g,b;
-				SDL_GetRGB(pixels[destination], format, &r, &g, &b);
+
+			//testing all pixels around
+			for (int y = -1; y<2;y++)
+			{
+				for (int x = -1; x<2;x++)
+				{
+            		int destination = (i+y)*w+(j+x);
+            		if (destination >= 0 && destination < length)  
+            		{
+						Uint8 r,g,b;
+						SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 		
-				uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[0]; 
-                number_of_box++;
-            }
-
-            //accessing top corner :
-            destination = (i-1)*w+j;
-            if (destination >= 0 && destination < length)  
-            {
-				Uint8 r,g,b;
-				SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-				uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[1]; 
-
-                number_of_box+=2;
-            }
-
-            //accessing top right corner :
-            destination = (i-1)*w+(j+1);
-            if (destination >= 0 && destination < length)  
-            {
-				Uint8 r,g,b;
-				SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-				uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[2]; 
-                number_of_box++;
-            }
-           
-            //accessing left :
-            destination = i*w+(j-1);
-            if (destination >= 0 && destination < length)  
-            {
-				Uint8 r,g,b;
-				SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-				uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[3]; 
-                number_of_box+=2;
-            }
-           
-            //accessing center :
-            destination = i*w+j;
-            if (destination >= 0 && destination < length)  
-            {
-				Uint8 r,g,b;
-				SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-				uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[4]; 
-                number_of_box+=4;
-            }
-           
-            //accessing right :
-            destination = i*w+(j+1);
-            if (destination >= 0 && destination < length)  
-            {
-				Uint8 r,g,b;
-				SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-				uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[5]; 
-                number_of_box+=2;
-            }
-           
-            //accessing bottom left corner :
-            destination = (i+1)*w+(j-1);
-            if (destination >= 0 && destination < length)  
-            {
-				Uint8 r,g,b;
-				SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-				uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[6]; 
-                number_of_box++;
-            }
-
-            //accessing bottom corner :
-            destination = (i+1)*w+j;
-            if (destination >= 0 && destination < length)  
-            {
-				Uint8 r,g,b;
-				SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-				uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[7]; 
-                number_of_box+=2;
-            }
-
-            //accessing bottom right corner :
-            destination = (i+1)*w+(j+1);
-            if (destination >= 0 && destination < length)  
-            {
-				Uint8 r,g,b;
-				SDL_GetRGB(pixels[destination], format, &r, &g, &b);
-
-				uint average = 0.3*r+ 0.59*g + 0.11*b;
-                res = res + average * kernel[8]; 
-                number_of_box++;
-            }
+						uint average = 0.3*r+ 0.59*g + 0.11*b;
+                		res = res + average * kernel[0]; 
+                		number_of_box++;
+            		}
+				}
+			}
 
             if (number_of_box != 0)
             {
