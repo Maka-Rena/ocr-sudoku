@@ -108,8 +108,9 @@ void Kernel_Convolution(SDL_Surface* surface)
 	int w = surface->w;
 	int h = surface->h;
     int length = surface->w * surface->h;
-    Uint32 result[length]; 
-
+    
+    Uint32 *result;
+    result = malloc(length * sizeof(Uint32));
     /*
         Formula to acces values in array :
         i * WIDTH + j
