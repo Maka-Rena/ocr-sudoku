@@ -138,7 +138,8 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
     SDL_LockSurface(surface);
 
 	//Create the lists to stock gradients 
-    float result_gradient[w*h];
+    float *result_gradient;
+    result_gradient = malloc(length * sizeof(Uint32));
     Uint32 *colored_gradient;
     colored_gradient = malloc(length * sizeof(Uint32));
 
