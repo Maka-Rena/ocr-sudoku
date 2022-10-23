@@ -45,6 +45,9 @@
 *.idb
 *.pdb
 
+# heavy files
+*.csv
+
 # Kernel Module Compile Results
 *.mod*
 *.cmd
