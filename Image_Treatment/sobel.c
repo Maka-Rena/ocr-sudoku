@@ -138,9 +138,10 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
     SDL_LockSurface(surface);
 
 	//Create the lists to stock gradients 
-    float result_gradient[w*h];
-	Uint32 colored_gradient[w*h];
-
+    float *result_gradient;
+    result_gradient = malloc(length * sizeof(Uint32));
+    Uint32 *colored_gradient;
+    colored_gradient = malloc(length * sizeof(Uint32));
     //Uint32 result_angle[w*h]; this variable is used to know the exact angle of an edge for every pixel
 
     uint kernelx[] = {-1, 0, 1,
@@ -291,6 +292,9 @@ void Kernel_Convolution(SDL_Surface* surface, int w, int h)
         //angle_gradient[i] = (Uint32)(result_angle[i]/max)*255;
 	}
     __sobel_transformation(surface, colored_gradient);//, angle_gradient);
+
+    free(colored_gradient);
+    free(result_gradient);
 }
 
 
