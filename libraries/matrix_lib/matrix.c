@@ -51,6 +51,7 @@ Matrix* matrix_copy(Matrix* m)
     for(int i = 0; i < m -> rows; i++)
        for(int j = 0; j < m -> cols; j++)
           mat -> entries[i][j] = m -> entries[i][j];
+    return mat;
 } 
 
 void matrix_save(Matrix* m, char* file_string)
@@ -69,15 +70,15 @@ Matrix* matrix_load(char* file_string)
 {
     FILE* file = fopen(file_string, "r");
     char entry[MAXCHAR];
-    fgets(entry, MAXCHAR, file);
+    //fgets(entry, MAXCHAR, file);
     int rows = atoi(entry);
-    fgets(entry, MAXCHAR,file);
+    //fgets(entry, MAXCHAR,file);
     int cols = atoi(entry);
     Matrix* m = matrix_create(rows, cols);
     for(int i = 0; i < m -> rows; i++)
         for(int j = 0; j < m -> cols; j++)
             {
-                fgets(entry,MAXCHAR,file);
+                //fgets(entry,MAXCHAR,file);
                 m -> entries[i][j] = strtod(entry, NULL);
             }
     printf("Successfully loaded matrix from %s\n", file_string);
