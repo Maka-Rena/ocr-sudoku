@@ -1,12 +1,13 @@
 #pragma once
-#include "../../../libraries/matrix_lib/matrix.h"
+#include "../../libraries/matrix_lib/matrix.h"
+#include "utilities/image.h"
 
 typedef struct{
     int input;
     int hidden;
     int output;
     double learning_rate;
-    Matrix* hidden_weigths;
+    Matrix* hidden_weights;
     Matrix* output_weights;
     Matrix* hidden_biases;
     Matrix* output_biases;
@@ -14,9 +15,9 @@ typedef struct{
 
 NeuralNetwork* network_create(int input, int hiddden, int output, double lr);
 void network_train(NeuralNetwork* net, Matrix* input_data, Matrix* output_data);
-void network_train_batch_imgs(NeuralNetwork* net, Img** imgs, int batch_size);
-Matrix* network_predict_img(NeuralNetwork* net, Img* img);
-double network_predict_imgs(NeuralNetwork* net, Img** imgs, int n);
+void network_train_batch_imgs(NeuralNetwork* net, Image** imgs, int batch_size);
+Matrix* network_predict_img(NeuralNetwork* net, Image* img);
+double network_predict_imgs(NeuralNetwork* net, Image** imgs, int n);
 Matrix* network_predict(NeuralNetwork* net, Matrix* input_data);
 void network_save(NeuralNetwork* net, char* file_string);
 NeuralNetwork* network_load(char* file_string);
