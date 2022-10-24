@@ -8,7 +8,7 @@
 
 void draw(SDL_Renderer* renderer, SDL_Texture* texture);
 
-void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* texture_blurred);
+void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* texture_gray, SDL_Texture* texture_blurred, SDL_Texture* texture_sobel);
 
 SDL_Surface* Load_image(const char* path);
 

@@ -15,7 +15,7 @@ void draw(SDL_Renderer* renderer, SDL_Texture* texture)
 // renderer:Renderer to draw on.
 // colored: Texture that contains the colored image.
 // texture_blurred: Texture that contains the blurred image.
-void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* texture_blurred)
+void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* texture_gray, SDL_Texture* texture_blurred, SDL_Texture* texture_sobel)
 {
     SDL_Event event;
     SDL_Texture* t = colored;
@@ -38,17 +38,26 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* textu
                 }
                 break;
             case SDL_KEYDOWN :
-                if (t == colored)
-                {
-                    draw(renderer, texture_blurred);
+				if (t == colored)
+				{
+                	draw(renderer, texture_gray);
+                    t = texture_gray;
+				}
+				else if (t == texture_gray)
+				{
+					draw(renderer, texture_blurred);
                     t = texture_blurred;
-                }
-                else
-                {
-                    draw(renderer, colored);
+				}
+				else if (t == texture_blurred)
+				{
+					draw(renderer, texture_sobel);
+                    t = texture_sobel;
+				}
+				else
+				{
+					draw(renderer, colored);
                     t = colored;
-                }
-                break;
+				}
         }
     }
 }

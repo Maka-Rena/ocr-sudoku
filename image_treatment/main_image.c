@@ -37,10 +37,10 @@ int main(int argc, char** argv)
     // - Resize the window according to the size of the image.
     SDL_SetWindowSize(window, surface->w, surface->h);
     
-    // - Create a texture from the colored surface.
+    // - Create a new texture from the surface.
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture == NULL)
-        errx(EXIT_FAILURE, "%s", SDL_GetError());
+		errx(EXIT_FAILURE, "%s", SDL_GetError());
 
     // - Convert the surface into grayscale.
     Surface_To_Grayscale(surface);
@@ -48,17 +48,43 @@ int main(int argc, char** argv)
     // - Create a new texture from the grayscale surface.
     SDL_Texture* texture_gray = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture_gray == NULL)
-        errx(EXIT_FAILURE, "%s", SDL_GetError());
+		errx(EXIT_FAILURE, "%s", SDL_GetError());
 
-    //to save the grayscale image in a png file
+	// - Convert the surface into blurred surface
+	Kernel_Convolution(surface);
+
+    // - Create a new texture from the blurred surface.
+    SDL_Texture* texture_blurred = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture_blurred == NULL)
+		errx(EXIT_FAILURE, "%s", SDL_GetError());
+	
+	// - Convert the surface into sobel surface 
+	Kernel_Convolution_Sobel(surface);
+
+	// - Create a new texture from the sobel surface.
+    SDL_Texture* texture_sobel = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture_sobel == NULL)
+		errx(EXIT_FAILURE, "%s", SDL_GetError());
+
+    //to save the blurred image in a png file
     IMG_SavePNG(surface, "final_picture.png");
 
     // - Free the surface.
     SDL_FreeSurface(surface);
     
     // - Dispatch the events.
-    event_loop(renderer,texture, texture_gray);
+    event_loop(renderer,texture,texture_gray, texture_blurred,texture_sobel);
 
     // - Destroy the objects.
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(texture_gray);
+    SDL_DestroyTexture(texture_blurred);
+    SDL_DestroyTexture(texture_sobel);
+    SDL_Quit();
+
+    return EXIT_SUCCESS;
+    
 
 	}
