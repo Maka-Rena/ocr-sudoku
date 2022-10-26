@@ -82,34 +82,71 @@ SDL_Surface* Load_image(const char* path)
 //
 // pixel_color: Color of the pixel to convert in the RGB format.
 // format: Format of the pixel used by the surface.
-Uint32 __Pixel_To_Grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
+void __Pixel_To_Grayscale(Uint32 pixel_color, SDL_PixelFormat* format, Uint32 *color, uint *average)
 {
     Uint8 r, g, b;
     SDL_GetRGB(pixel_color, format, &r, &g, &b);
 
     
-    uint average = 0.3*r + 0.59*g +0.11*b;
-    Uint32 color = SDL_MapRGB(format, average, average, average);
-    return color;
+    *average = 0.3*r + 0.59*g +0.11*b;
+    *color = SDL_MapRGB(format, *average, *average, *average);
 }
 
 void Surface_To_Grayscale(SDL_Surface* surface)
 {
     Uint32* pixels = surface->pixels;
+    
     if (pixels == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
+    
     int len = surface->w * surface->h;
+    
     SDL_PixelFormat* format = surface->format;
     if (format == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
     SDL_LockSurface(surface);
     int count = 0;
+
+    //histogram to count the number of time a pixel color appears
+    int hist[256] = { 0 };
+    
+    
     while (count < len)
     {
-        pixels[count] = __Pixel_To_Grayscale(pixels[count], format);
+        Uint32 color;
+        uint average;
+        __Pixel_To_Grayscale(pixels[count], format, &color, &average);
+        
+        //step1 for equalization : get the histogram 
+        hist[average]++;
+        
+        pixels[count] = color;
         count++;
     }
+/*
+    //step2 for equalization : calculate probabilty of each pixel intensity
+    float prob[256] = {0};
+    for (int i = 0; i < 256;i++)
+    {
+        prob[i] =  ((float) hist[i])/len;
+    }
+
+    //step3 : cumulative probability
+    float cumulativ[256] = {0};
+    cumulativ[0] = prob[0];
+    for (int i = 1; i < 256;i++)
+    {
+        cumulativ[i] =  ((prob[i] + cumulativ[i-1])* 255) / len;
+    }
+
+    count = 0;
+    while (count < 256)
+    {
+        uint new_color = cumulativ[count];
+        pixels[count] = SDL_MapRGB(format, new_color, new_color, new_color);
+        count++;
+    }*/
     SDL_UnlockSurface(surface);
 }
 

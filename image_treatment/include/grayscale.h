@@ -12,6 +12,6 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* textu
 
 SDL_Surface* Load_image(const char* path);
 
-Uint32 __Pixel_To_Grayscale(Uint32 pixel_color, SDL_PixelFormat* format);
+void __Pixel_To_Grayscale(Uint32 pixel_color, SDL_PixelFormat* format, Uint32 *color, Uint32 *average);
 
 void Surface_To_Grayscale(SDL_Surface* surface);
