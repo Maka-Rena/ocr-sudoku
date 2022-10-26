@@ -15,7 +15,7 @@ void draw(SDL_Renderer* renderer, SDL_Texture* texture)
 // renderer:Renderer to draw on.
 // colored: Texture that contains the colored image.
 // texture_blurred: Texture that contains the blurred image.
-void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* texture_gray, SDL_Texture* texture_blurred, SDL_Texture* texture_sobel)
+void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* texture_gray, SDL_Texture* texture_blurred, SDL_Texture* texture_sobel, SDL_Texture* blackandwhite)
 {
     SDL_Event event;
     SDL_Texture* t = colored;
@@ -50,9 +50,14 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* textu
 				}
 				else if (t == texture_blurred)
 				{
-					draw(renderer, texture_sobel);
-                    t = texture_sobel;
+					draw(renderer, blackandwhite);
+                    t = blackandwhite;
 				}
+                else if (t == blackandwhite)
+                {
+                    draw(renderer, texture_sobel);
+                    t = texture_sobel;
+                }
 				else
 				{
 					draw(renderer, colored);
@@ -124,8 +129,8 @@ void Surface_To_Grayscale(SDL_Surface* surface)
         pixels[count] = color;
         count++;
     }
-/*
-    //step2 for equalization : calculate probabilty of each pixel intensity
+
+   /* //step2 for equalization : calculate probabilty of each pixel intensity
     float prob[256] = {0};
     for (int i = 0; i < 256;i++)
     {

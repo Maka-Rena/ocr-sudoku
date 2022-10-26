@@ -2,7 +2,7 @@
 
 //Find the max in the list 
 //used for resizing the datas
-float find_max(float list[], int len)
+double find_max(double list[], int len)
 {
      int max = 0;
      for(int i = 0; i < len; i++)
@@ -14,7 +14,7 @@ float find_max(float list[], int len)
 }
 
 
-void __sobel_transformation(SDL_Surface* surface, Uint32* resultgradient)//, Uint32* resultangle) 
+void __sobel_transformation(SDL_Surface* surface, double* resultgradient)//, Uint32* resultangle) 
 {
     Uint32* pixels = surface->pixels;
     if (pixels == NULL)
@@ -28,13 +28,13 @@ void __sobel_transformation(SDL_Surface* surface, Uint32* resultgradient)//, Uin
     int count = 0;
     while (count < len)
     {
-        Uint32 color = resultgradient[count];
+        double color = resultgradient[count];
         //<= 50 works for non grayscaled images
         //<= 100 for grayscaled and blurred
-        if (color <= 100)
-            pixels[count] = SDL_MapRGB(format, 0, 0, 0);
-        else
+        if (color > 111)
             pixels[count] = SDL_MapRGB(format, 255, 255, 255);
+        else
+            pixels[count] = SDL_MapRGB(format, 0, 0, 0);
         count++;
     }
     SDL_UnlockSurface(surface);
@@ -69,17 +69,17 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface)
     SDL_LockSurface(surface);
 
 	//Create the lists to stock gradients 
-    float *result_gradient;
-    result_gradient = malloc(length * sizeof(Uint32));
-    Uint32 *colored_gradient;
-    colored_gradient = malloc(length * sizeof(Uint32));
+    double *result_gradient;
+    result_gradient = malloc(length * sizeof(double));
+    double *colored_gradient;
+    colored_gradient = malloc(length * sizeof(double));
     //Uint32 result_angle[w*h]; this variable is used to know the exact angle of an edge for every pixel
 
-    uint kernelx[] = {-1, 0, 1,
+    double kernelx[] = {-1, 0, 1,
         -2, 0, 2, 
         -1, 0, 1};
 
-    uint kernely[] = {-1, -2, 1,
+    double kernely[] = {-1, -2, 1,
         0, 0, 0, 
         1, 2, 1};
 
@@ -104,6 +104,7 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface)
                 SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
                 resx = resx + r * kernelx[3]; 
+
             }
 
             //accessing right :
@@ -114,6 +115,7 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface)
                 SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
                 resx = resx + r * kernelx[5]; 
+
             }
 
             //FOR G(Y):
@@ -125,6 +127,7 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface)
                 SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
                 resy = resy + r * kernely[1]; 
+
             }
             
 			//accessing bottom :
@@ -135,6 +138,7 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface)
                 SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
                 resy = resy + r * kernely[7]; 
+
             }
 
             //FOR BOTH G(X) and G(Y):
@@ -147,6 +151,7 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface)
 
                 resy = resy + r * kernely[0]; 
                 resx = resx + r * kernelx[0]; 
+
             }
 
             //accessing top right corner :
@@ -158,6 +163,7 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface)
 
                 resy = resy + r * kernely[2]; 
                 resx = resx + r * kernelx[2]; 
+
             }
 
             //accessing bottom left corner :
@@ -169,6 +175,7 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface)
 
                 resy = resy + r * kernely[6]; 
                 resx = resx + r * kernelx[6]; 
+
             }
 
             //accessing bottom right corner :
@@ -178,11 +185,15 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface)
                 Uint8 r,g,b;
                 SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 
+                
                 resy = resy + r * kernely[8]; 
                 resx = resx + r * kernelx[8]; 
             }
 
-            result_gradient[i*w+j] = sqrt((pow(resy,2))+pow(resx,2));
+            resx = pow(resx, 2);
+            resy = pow(resy, 2);
+            result_gradient[i*w+j] = sqrt(resy + resx);
+
 			//result_angle[i*w+j] = atan(resy/resx); 
 
             j++;
@@ -195,7 +206,7 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface)
 	//resizing all datas
 	for(int i=0; i<w*h; i++)
 	{
-		colored_gradient[i] = (Uint32)((result_gradient[i]/max)*255);
+		colored_gradient[i] = ((result_gradient[i]/max)*255);
         //angle_gradient[i] = (Uint32)(result_angle[i]/max)*255;
 	}
 

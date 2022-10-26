@@ -8,6 +8,8 @@
 #include "./include/gaussian.h"
 #include "./include/grayscale.h"
 
+#include "./include/black_n_white.h"
+
 int main(int argc, char** argv)
 {
     // Checks the number of arguments.
@@ -40,7 +42,7 @@ int main(int argc, char** argv)
     // - Create a new texture from the surface.
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture == NULL)
-		errx(EXIT_FAILURE, "%s", SDL_GetError());
+		  errx(EXIT_FAILURE, "%s", SDL_GetError());
 
     // - Convert the surface into grayscale.
     Surface_To_Grayscale(surface);
@@ -48,23 +50,30 @@ int main(int argc, char** argv)
     // - Create a new texture from the grayscale surface.
     SDL_Texture* texture_gray = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture_gray == NULL)
-		errx(EXIT_FAILURE, "%s", SDL_GetError());
+		  errx(EXIT_FAILURE, "%s", SDL_GetError());
 
-	// - Convert the surface into blurred surface
-	Kernel_Convolution(surface);
+	  // - Convert the surface into blurred surface
+	  Kernel_Convolution(surface);
 
     // - Create a new texture from the blurred surface.
     SDL_Texture* texture_blurred = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture_blurred == NULL)
-		errx(EXIT_FAILURE, "%s", SDL_GetError());
-	
-	// - Convert the surface into sobel surface 
-	Kernel_Convolution_Sobel(surface);
+		  errx(EXIT_FAILURE, "%s", SDL_GetError());
 
-	// - Create a new texture from the sobel surface.
+    blackandwhite(surface);
+
+    SDL_Texture* blackandwhite = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture_blurred == NULL)
+		  errx(EXIT_FAILURE, "%s", SDL_GetError());
+
+
+	  // - Convert the surface into sobel surface 
+	  Kernel_Convolution_Sobel(surface);
+
+	  // - Create a new texture from the sobel surface.
     SDL_Texture* texture_sobel = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture_sobel == NULL)
-		errx(EXIT_FAILURE, "%s", SDL_GetError());
+		  errx(EXIT_FAILURE, "%s", SDL_GetError());
 
     //to save the blurred image in a png file
     IMG_SavePNG(surface, "final_picture.png");
@@ -73,7 +82,7 @@ int main(int argc, char** argv)
     SDL_FreeSurface(surface);
     
     // - Dispatch the events.
-    event_loop(renderer,texture,texture_gray, texture_blurred,texture_sobel);
+    event_loop(renderer,texture,texture_gray, texture_blurred,texture_sobel, blackandwhite);
 
     // - Destroy the objects.
     SDL_DestroyRenderer(renderer);
@@ -82,9 +91,8 @@ int main(int argc, char** argv)
     SDL_DestroyTexture(texture_gray);
     SDL_DestroyTexture(texture_blurred);
     SDL_DestroyTexture(texture_sobel);
+    SDL_DestroyTexture(blackandwhite);
     SDL_Quit();
 
     return EXIT_SUCCESS;
-    
-
-	}
+}   
