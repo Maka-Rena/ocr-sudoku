@@ -9,13 +9,18 @@
 #define hiddenLayerNeurons 2
 #define outputLayerNeurons 1
 #define epochs 100000
-#define learning_rate 0.4f
+#define learning_rate 0.2f
 /* Sigmoid function
  * x is the activation input
  * returns the activation value */
 double sigmoid(double x)
 {
     return 1.0 / (1 + exp(-1 * x)); 
+    /*Leaky relu version
+    if(x < 0)
+        return 0.1f*x;
+    else
+        return x;*/
 }
 
 /* Derivative of sigmoid function for backpropagation purposes
@@ -35,6 +40,18 @@ Matrix* sigmoidPrime(Matrix* m)
     matrix_free(ones);
     matrix_free(substracted);
     return multiplied;
+
+    /* Leaky relu derivative
+    Matrix* res = matrix_create(m->rows, m->cols);
+    for(int i = 0; i < m-> rows; i++)
+        for(int j = 0; j < m-> cols; j++)
+        {
+            if(m->entries[i][j] < 0)
+                res->entries[i][j] = 0.1f;
+            else
+                res->entries[i][j] = 1.0f;
+        }
+    return res;*/
 }
 
 /* Function to initialize weights and biases with random values */
