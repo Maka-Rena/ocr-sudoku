@@ -73,6 +73,7 @@ void Kernel_Convolution(SDL_Surface* surface)
     double kernel[] = {0.0625, 0.125, 0.0625,
                     0.125, 0.25, 0.125, 
                     0.0625, 0.125, 0.0625};*/
+
     double kernel[] = {1, 1, 1,
                     1, 1, 1, 
                     1, 1, 1};
@@ -99,7 +100,7 @@ void Kernel_Convolution(SDL_Surface* surface)
 						Uint8 r,g,b;
 						SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 		
-                		res = res + r * kernel[k]; 
+                		res += r * kernel[k]; 
                 		number_of_box++;
 						k++;
 					}
@@ -108,7 +109,7 @@ void Kernel_Convolution(SDL_Surface* surface)
 
             if (number_of_box != 0)
             {
-				double newcolor = res / number_of_box;
+				double newcolor = res/number_of_box;// / number_of_box;
             	result[i*w+j] = SDL_MapRGB(format, newcolor, newcolor, newcolor); 
             	//printf("res = %f, number_of_box = %f, result = %f\n", res, number_of_box, result[i*w+j]);
 			}
