@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <err.h>
 #include <time.h>
-#include "./include/solverTests.h"
+#include "./include/parserTests.h"
 
 //COLORS
 #define RED "\033[31;1m"
