@@ -1,7 +1,7 @@
 #include "../include/gaussian.h"
 
 //draw the blurred surface from the kernel convulution
-void __Blurring_process(SDL_Surface* surface, Uint32* result)
+void __Blurring_process(SDL_Surface* surface, double* result)
 {
     Uint32* pixels = surface->pixels;
     if (pixels == NULL)
@@ -15,7 +15,7 @@ void __Blurring_process(SDL_Surface* surface, Uint32* result)
     int count = 0;
     while (count < len)
     {
-        uint color = result[count];
+        uint color = (uint) result[count];
         pixels[count] = SDL_MapRGB(format, color, color, color);
         count++;
     }
@@ -38,8 +38,8 @@ void Kernel_Convolution(SDL_Surface* surface)
 	int w = surface->w;
 	int h = surface->h;
     int length = surface->w * surface->h;
-    Uint32 *result;
-    result = malloc(length * sizeof(Uint32));
+    double *result;
+    result = malloc(length * sizeof(double));
 
     /*
         Formula to acces values in array :
@@ -65,15 +65,21 @@ void Kernel_Convolution(SDL_Surface* surface)
     /*
     This is the basic kernel for implementation of 3
     */
-    /*uint kernel[] = {1, 2, 1,
-                    2, 4, 2, 
-                    1, 2 , 1};
-    */
-    uint kernel[] = {1, 1, 1,
+    /*
+              double kernel[] = {1, 1, 1,
                     1, 1, 1, 
                     1, 1, 1};
+    
+    double kernel[] = {0.0625, 0.125, 0.0625,
+                    0.125, 0.25, 0.125, 
+                    0.0625, 0.125, 0.0625};*/
+
+    double kernel[] = {1, 1, 1,
+                    1, 1, 1, 
+                    1, 1, 1};
+
     //2ND STEP : ACCESSING EVERY PIXELS
-    uint res = 0;
+    double res = 0;
     int i = 0;
     while (i < h) 
     {
@@ -81,8 +87,8 @@ void Kernel_Convolution(SDL_Surface* surface)
         while (j < w)
         {
             res = 0;
-            uint number_of_box = 0;
-			uint k = 0;
+            double number_of_box = 0;
+			int k = 0;
 			//testing all pixels around
 			for (int y = -1; y<2;y++)
 			{
@@ -94,7 +100,7 @@ void Kernel_Convolution(SDL_Surface* surface)
 						Uint8 r,g,b;
 						SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 		
-                		res = res + r * kernel[k]; 
+                		res += r * kernel[k]; 
                 		number_of_box++;
 						k++;
 					}
@@ -103,7 +109,7 @@ void Kernel_Convolution(SDL_Surface* surface)
 
             if (number_of_box != 0)
             {
-				uint newcolor = res / number_of_box;
+				double newcolor = res/number_of_box;// / number_of_box;
             	result[i*w+j] = SDL_MapRGB(format, newcolor, newcolor, newcolor); 
             	//printf("res = %f, number_of_box = %f, result = %f\n", res, number_of_box, result[i*w+j]);
 			}
@@ -114,4 +120,5 @@ void Kernel_Convolution(SDL_Surface* surface)
     }
     __Blurring_process(surface, result);
     free(result);
+    SDL_UnlockSurface(surface);
 }
