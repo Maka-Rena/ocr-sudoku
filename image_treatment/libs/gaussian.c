@@ -82,7 +82,7 @@ void Kernel_Convolution(SDL_Surface* surface)
         {
             res = 0;
             uint number_of_box = 0;
-
+			uint k = 0;
 			//testing all pixels around
 			for (int y = -1; y<2;y++)
 			{
@@ -94,9 +94,9 @@ void Kernel_Convolution(SDL_Surface* surface)
 						Uint8 r,g,b;
 						SDL_GetRGB(pixels[destination], format, &r, &g, &b);
 		
-						uint average = 0.3*r+ 0.59*g + 0.11*b;
-                		res = res + average * kernel[0]; 
+                		res = res + r * kernel[k]; 
                 		number_of_box++;
+						k++;
 					}
 				}
 			}
