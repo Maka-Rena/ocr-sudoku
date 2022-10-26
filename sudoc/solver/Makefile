@@ -7,7 +7,7 @@ LDFLAGS =
 LDLIBS =
 SOLVER_DIR = solver
 
-SRC = ${wildcard ./includes/*.c} ${wildcard ./libs/*.c} ${wildcard main.c}
+SRC = ${wildcard ./includes/*.c} ${wildcard ./libs/*.c} ${wildcard solverMain.c}
 OBJ = ${SRC:.c=.o}
 EXE = ${SRC:.c=}
 
@@ -16,12 +16,10 @@ EXE = ${SRC:.c=}
 all: build
 
 build: ${OBJ}
-#@$(CC) -o $(SRC_SOLVER) $^ $(LDFLAGS) $(LDLIBS)
-#@$(CC) $(OBJ) -lm -o $(EXE)
-	@$(CC) -o main $^ $(LDFLAGS) $(LDLIBS)
+	@$(CC) -o solver $^ $(LDFLAGS) $(LDLIBS)
 
 clean:
 	${RM} ${OBJ}
 	${RM} ${EXE}
-
+	${RM} solver
 #End Makefile
