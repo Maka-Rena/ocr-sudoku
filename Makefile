@@ -15,11 +15,14 @@ BUILD_DIR := build
 
 SRC := ./sudoc/main.c
 
-SOLVER_SRC :=	${wildcard ./solver/libs/*.c} ./solver/solverMain.c
+SOLVER_SRC :=	${wildcard ./sudoc/solver/libs/*.c} ./sudoc/solver/solverMain.c
 
-TEST_SRC :=	${wildcard ./solver/libs/*.c} \
+TEST_SRC :=	${wildcard ./sudoc/solver/libs/*.c} \
+			${wildcard ./sudoc/tests/libs/*.c} \
 			${wildcard ./tests/libs/*.c} \
 			${wildcard ./tests/*.c} \
+			${wildcard ./sudoc/libraries/matrix_lib/*.c}
+
 
 OBJ := ${SRC:.c=.o}
 TEST_OBJ := ${TEST_SRC:.c=.o}
@@ -48,10 +51,6 @@ run: build clean-sudoc
 
 test: build-test
 	@./$(BUILD_DIR)/$(EXEC_TEST)
-
-# test with valgrind
-#tv: build-test
-#	@valgrind --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC_TEST)
 
 # CLEAN
 clean-sudoc:
