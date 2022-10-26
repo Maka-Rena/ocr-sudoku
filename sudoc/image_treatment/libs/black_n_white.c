@@ -1,4 +1,4 @@
-#include "../include/gaussian.h"
+#include "../include/black_n_white.h"
 
 
 void blackandwhite(SDL_Surface* surface)
