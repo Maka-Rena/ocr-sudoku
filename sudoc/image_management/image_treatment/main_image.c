@@ -27,7 +27,7 @@ void draw(SDL_Renderer* renderer, SDL_Texture* texture)
 // renderer:Renderer to draw on.
 // colored: Texture that contains the colored image.
 // texture_blurred: Texture that contains the blurred image.
-void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* texture_gray, SDL_Texture* texture_blurred, SDL_Texture* texture_sobel, SDL_Texture* blackandwhite, SDL_Texture* contrasted_texture)
+void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* texture_gray, SDL_Texture* texture_blurred, SDL_Texture* texture_sobel, SDL_Texture* texture_blackandwhite)//, SDL_Texture* contrasted_texture)
 {
     SDL_Event event;
     SDL_Texture* t = colored;
@@ -57,20 +57,21 @@ void event_loop(SDL_Renderer* renderer, SDL_Texture* colored, SDL_Texture* textu
 				}
 				else if (t == texture_gray)
 				{
-					draw(renderer, contrasted_texture);
-                    t = texture_blurred;
-				}
-                else if (t == contrasted_texture)
-				{
 					draw(renderer, texture_blurred);
                     t = texture_blurred;
 				}
-				else if (t == texture_blurred)
+                else if (t == texture_blurred)
+				{
+					draw(renderer, texture_blackandwhite);
+                    t = texture_blackandwhite;
+				}
+				/*
+				else if (t == texture_contrasted)
 				{
 					draw(renderer, blackandwhite);
                     t = blackandwhite;
-				}
-                else if (t == blackandwhite)
+				}*/
+                else if (t == texture_blackandwhite)
                 {
                     draw(renderer, texture_sobel);
                     t = texture_sobel;
@@ -142,12 +143,12 @@ int main(int argc, char** argv)
     if (texture_gray == NULL)
 		  errx(EXIT_FAILURE, "%s", SDL_GetError());
 
-    contrast(surface);
+    /*contrast(surface);
 
-    SDL_Texture* contrasted_texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Texture* contrasted_texture = SDL_CreateTextureFromSurface(renderer, surface);*/
 
-	  // - Convert the surface into blurred surface
-	  Kernel_Convolution(surface);
+	// - Convert the surface into blurred surface
+	Kernel_Convolution(surface);
 
     // - Create a new texture from the blurred surface.
     SDL_Texture* texture_blurred = SDL_CreateTextureFromSurface(renderer, surface);
@@ -156,8 +157,8 @@ int main(int argc, char** argv)
 
     blackandwhite(surface);
 
-    SDL_Texture* blackandwhite = SDL_CreateTextureFromSurface(renderer, surface);
-    if (texture_blurred == NULL)
+    SDL_Texture* texture_blackandwhite = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture_blackandwhite == NULL)
 		  errx(EXIT_FAILURE, "%s", SDL_GetError());
 
 
@@ -176,7 +177,7 @@ int main(int argc, char** argv)
     SDL_FreeSurface(surface);
     
     // - Dispatch the events.
-    event_loop(renderer,texture,texture_gray, texture_blurred,texture_sobel, blackandwhite, contrasted_texture);
+    event_loop(renderer,texture,texture_gray, texture_blurred,texture_sobel, texture_blackandwhite);// contrasted_texture);
 
     // - Destroy the objects.
     SDL_DestroyRenderer(renderer);
@@ -185,8 +186,8 @@ int main(int argc, char** argv)
     SDL_DestroyTexture(texture_gray);
     SDL_DestroyTexture(texture_blurred);
     SDL_DestroyTexture(texture_sobel);
-    SDL_DestroyTexture(blackandwhite);
-    SDL_DestroyTexture(contrasted_texture);
+    SDL_DestroyTexture(texture_blackandwhite);
+    //SDL_DestroyTexture(contrasted_texture);
     SDL_Quit();
 
     return EXIT_SUCCESS;
