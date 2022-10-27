@@ -11,7 +11,7 @@ void network_save(NeuralNetwork* net/*,char* dir_name*/)
     matrix_save(net->hidden_weights, "hidden_weights");
     matrix_save(net->output_weights, "output_weights");
     //matrix_save(net->hidden_bias, "hidden_bias");
-    //matrix_save(net->output_bias, "outut_bias");
+    //matrix_save(net->output_bias, "output_bias");
     //printf("Successfully written to '%s' \n",dir_name);
     printf("Network successfully saved\n");
 }
@@ -20,9 +20,12 @@ NeuralNetwork* network_load(char* data_file)
 {
     NeuralNetwork* net = malloc(sizeof(NeuralNetwork));
     FILE* descriptor = fopen(data, "r");
-    int input = fscanf(descriptor, %d);
-    int hidden = fscanf(descriptor, %d);
-    int output = fscanf(descriptor, %d);
+    int input;
+    fscanf(descriptor, "%d", &input); // Use of & to associate the value to the address of input
+    int hidden;
+    fscanf(descriptor, "%d", &hidden); // Use of & to associate the value to the address of hidden
+    int output; 
+    fscanf(descriptor, "%d", &output); // Use of & to associate the value to the address of output
     net->input = input;
     net->hidden = hidden;
     net->output = output;
