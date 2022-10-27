@@ -1,23 +1,22 @@
 # Makefile
-C_SOURCES = $(wildcard matrix/*.c neural/*.c util/*.c *.c)
-HEADERS = $(wildcard matrix/*.h neural/*.h util/*.h *.h)
-OBJ = ${C_SOURCES:.c=.o}
-	CFLAGS = 
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
+LDFLAGS := -lm
 
-MAIN = main
-CC = /usr/bin/gcc
-LINKER = /usr/bin/ld
 
-run: ${MAIN}
-	./${MAIN}
+SRC = ${wildcard *.c} ${wildcard main_matrix.c}
+OBJ = ${SRC:.c=.o}
+EXE = ${SRC:.c=}
 
-main: ${OBJ}
-	${CC} ${CFLAGS} $^ -o $@ -lm
+.PHONY: clean build all
 
-# Generic rules
-%.o: %.c ${HEADERS}
-	${CC} ${CFLAGS} -c $< -o $@ -lm
+all: build
+
+build: ${OBJ}
+	@$(CC) -o main_matrix $^ $(LDFLAGS) $(CFLAGS) $(LDLIBS)
 
 clean:
-	rm *.o ${MAIN}
+	${RM} ${OBJ}
+	${RM} ${EXE}
+	${RM} main_matrix
 # END
