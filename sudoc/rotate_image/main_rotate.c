@@ -22,9 +22,9 @@ int main(int argc, char **argv)
 
     if (image == NULL)
         errx(EXIT_FAILURE, "Error: %s\n", SDL_GetError());
-    
+
     //Rotate the image
-    rotate_image(image, rotated, 45);
+    rotate_image(image, rotated, 35);
     IMG_SavePNG(rotated, "out.png");
     return EXIT_SUCCESS;
 }
