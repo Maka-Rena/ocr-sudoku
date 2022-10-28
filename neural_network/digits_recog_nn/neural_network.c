@@ -22,9 +22,4 @@ NeuralNetwork* network_create(int input, int hidden, int output, double lr)
     network->hidden_weights = hidden_layer;
     network->output_weights = output_layer;
     return network;
-}
-
-int main()
-{
-    return 0;
-}
+} 

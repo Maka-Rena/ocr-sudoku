@@ -10,6 +10,6 @@ double leaky_relu(double x)
     if(x > 0)
         return x;
     else
-        return 0.1x;
+        return 0.1*x;
 }
 
