@@ -1,5 +1,5 @@
 #pragma once
-
+#include <math.h>
 #include "../../../libraries/matrix_lib/include/ops.h"
 
 double sigmoid(double x);

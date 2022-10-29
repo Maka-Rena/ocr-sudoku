@@ -19,7 +19,5 @@ void network_train_batch_imgs(NeuralNetwork* net, Image** imgs, int batch_size);
 Matrix* network_predict_img(NeuralNetwork* net, Image* img);
 double network_predict_imgs(NeuralNetwork* net, Image** imgs, int n);
 Matrix* network_predict(NeuralNetwork* net, Matrix* input_data);
-void network_save(NeuralNetwork* net, char* file_string);
-NeuralNetwork* network_load(char* file_string);
 void network_print(NeuralNetwork* net);
 void network_free(NeuralNetwork* net);

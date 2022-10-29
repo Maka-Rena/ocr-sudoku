@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
 LDFLAGS := -lm
 
 
-SRC = ${wildcard ../../libraries/matrix_lib/libs/*.c} ${wildcard ./libs/*.c} ${wildcard main_neuralnetwork.c}
+SRC = ${wildcard ../../libraries/matrix_lib/libs/*.c} ${wildcard ../../libraries/data_set_lib/libs/*.c} ${wildcard ./libs/*.c} ${wildcard main_neuralnetwork.c}
 OBJ = ${SRC:.c=.o}
 EXE = ${SRC:.c=}
 
