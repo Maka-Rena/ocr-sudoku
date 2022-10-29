@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
 LDFLAGS := -lm
 
 
-SRC = ${wildcard ../../libraries/matrix_lib/*.c} ${wildcard main_xor.c}
+SRC = ${wildcard ../../libraries/matrix_lib/libs/*.c} ${wildcard libs/main_xor.c}
 OBJ = ${SRC:.c=.o}
 EXE = ${SRC:.c=}
 

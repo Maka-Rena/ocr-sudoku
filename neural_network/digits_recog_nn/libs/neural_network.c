@@ -1,11 +1,10 @@
-#include "neural_network.h"
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "../../libraries/matrix_lib/ops.h"
-#include "activation.h"
+#include "../include/activation.h"
+#include "../include/neural_network.h"
 
 NeuralNetwork* network_create(int input, int hidden, int output, double lr)
 {

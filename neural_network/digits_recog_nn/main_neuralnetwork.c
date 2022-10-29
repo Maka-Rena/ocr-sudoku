@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "neural_network.h"
-#include "load_and_save.h"
+#include "include/neural_network.h"
+#include "include/load_and_save.h"
 
 int main()
 {

@@ -1,6 +1,6 @@
 #pragma once
-#include "../../libraries/matrix_lib/matrix.h"
-#include "utilities/image.h"
+#include "../../../libraries/matrix_lib/include/matrix.h"
+#include "../../../libraries/data_set_lib/include/image.h"
 
 typedef struct{
     int input;

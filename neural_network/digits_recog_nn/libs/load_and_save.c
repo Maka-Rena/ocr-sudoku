@@ -1,4 +1,4 @@
-#include "load_and_save.h"
+#include "../include/load_and_save.h"
 
 NeuralNetwork* network_load(char* dir_name)
 {

@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "main_xor.h"
-#include "../../libraries/matrix_lib/matrix.h"
-#include "../../libraries/matrix_lib/ops.h"
+#include "../../../libraries/matrix_lib/include/matrix.h"
+#include "../../../libraries/matrix_lib/include/ops.h"
 
 #define inputLayerNeurons 2
 #define hiddenLayerNeurons 2
