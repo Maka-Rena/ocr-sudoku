@@ -12,16 +12,21 @@ void croped_image(SDL_Surface *image, SDL_Surface *croped, int begin, int end)
 	if (begin < 0 || end > len)
 		errx(EXIT_FAILURE, "%s", "index out of borns");
 
-    int new_len = rotated->w*rotated->h;
+    //int new_len = croped->w*croped->h;
 
 	SDL_LockSurface(croped);
 	int j = 0;
-    for (int i = begin; i < end; i++)
-    {
-		new_pixels[j] = pixels[i]; 
-    	j++;
-    }
-
+	int hmax = croped->h;
+	while (hmax != 0)
+	{
+    	for (int i = 0; i < croped->w; i++)
+    	{
+			new_pixels[j] = pixels[begin + i]; 
+    		j++;
+    	}
+		hmax--;
+		begin = begin + image->w;
+	}
 	SDL_UnlockSurface(croped); 
 }
 
