@@ -14,9 +14,14 @@
 int main()
 {
     static int (*parser_tests[])() = {
-        parserTests,
+        parserTests_1,
+        parserTests_2,
     };
 
+    static int (*solver_tests[])() = {
+        parserTests_1,
+        parserTests_2,
+    };
     //Starting timer
     clock_t begin = clock();
 
@@ -40,17 +45,33 @@ int main()
     }
     printf("\n");
 
+    printf(YELLOW "Running SOLVER tests...\n" RESET);
+    int test_solver_count = sizeof(solver_tests) / sizeof(solver_tests[0]);
+
+    for (int i = 0; i < test_solver_count; i++)
+    {
+        if (solver_tests[i]() != 0)
+        {
+            failed++;
+            printf(RED "Solver tests n°%d FAILED!\n" RESET, i);
+        }
+        else
+            printf(GREEN "Solver tests n°%d passed\n" RESET, i);
+        test_count++;
+    }
+    printf("\n");
+
     clock_t end = clock();
     double elapsed = ((double)(end - begin)) / CLOCKS_PER_SEC;
     
-    printf(GREEN "--- ENDING TESTS SUITES ---\n" RESET);
+    printf(YELLOW "--- ENDING TESTS SUITES ---\n" RESET);
     if (failed == 0)
         printf(GREEN "ALL TESTS PASSED (%d tests)!\n" RESET, test_count);
     else
     {
         printf(RED "FAILED %d TESTS!\n" RESET, failed);
+        printf("%d TESTS PASSED!\n", test_count);
     }
-    printf("%d TESTS PASSED!\n", test_count);
     printf("Time taken: %f seconds\n", elapsed);
 
     if (failed)
