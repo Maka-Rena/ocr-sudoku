@@ -74,8 +74,8 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface, double* result_angle)
     double *colored_gradient;
     colored_gradient = malloc(length * sizeof(double));
 
-    double *angle_gradient;
-    angle_gradient = malloc(length * sizeof(double));
+    //double *angle_gradient;
+    //angle_gradient = malloc(length * sizeof(double));
     //Uint32 result_angle[w*h]; this variable is used to know the exact angle of an edge for every pixel
 
     double kernelx[] = {-1, 0, 1,
@@ -209,18 +209,19 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface, double* result_angle)
     }
 
 	int max = find_max(result_gradient,w*h); //find the max
-
 	//resizing all datas
 	for(int i=0; i<w*h; i++)
 	{
+        //printf("%f\n",result_angle[i]);
 		colored_gradient[i] = ((result_gradient[i]/max)*255);
-        angle_gradient[i] = (Uint32)(result_angle[i]/max)*255;
+        //angle_gradient[i] = (Uint32)(result_angle[i]/max)*255;
+        //printf("%d", (Uint32)(result_angle[i]/max)*255);
 	}
 
     __sobel_transformation(surface, colored_gradient);//, angle_gradient);
 
-    result_gradient = angle_gradient;
+    //result_gradient = angle_gradient;
     free(colored_gradient);
-    free(angle_gradient);
+    //free(angle_gradient);
 }
 
