@@ -8,8 +8,8 @@
 
 int main(int argc, char **argv)
 {
-    if (argc!= 3)
-        errx(EXIT_FAILURE, "Usage: %s <image> <output>", argv[0]);
+    if (argc != 4)
+        errx(EXIT_FAILURE, "Usage: %s <image> <output> angle", argv[0]);
 
     SDL_Surface *image = IMG_Load(argv[1]);
     //Create rotated surface with the same size as the original
@@ -24,7 +24,7 @@ int main(int argc, char **argv)
         errx(EXIT_FAILURE, "Error: %s\n", SDL_GetError());
 
     //Rotate the image
-    rotate_image(image, rotated, 35);
+    rotate_image(image, rotated, atof(argv[3]));
     IMG_SavePNG(rotated, "out.png");
     return EXIT_SUCCESS;
 }

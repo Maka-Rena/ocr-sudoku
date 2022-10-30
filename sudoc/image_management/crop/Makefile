@@ -22,6 +22,6 @@ build: ${OBJ}
 clean:
 	${RM} ${OBJ}
 	${RM} ${EXE}
-	${RM} final_picture.png
+	${RM} croped_picture.png
 #End Makefile
 
