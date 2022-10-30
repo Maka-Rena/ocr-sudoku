@@ -1,6 +1,6 @@
 #pragma once
-
-#include "../../libraries/matrix_lib/ops.h"
+#include <math.h>
+#include "../../../libraries/matrix_lib/include/ops.h"
 
 double sigmoid(double x);
 Matrix* sigmoidPrime(Matrix* m);

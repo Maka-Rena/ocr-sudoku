@@ -1,4 +1,4 @@
-#include "matrix.h"
+#include "../include/matrix.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,17 +69,25 @@ void matrix_save(Matrix* m, char* file_string)
 Matrix* matrix_load(char* file_string)
 {
     FILE* file = fopen(file_string, "r");
-    char entry[MAXCHAR];
+    //char entry[MAXCHAR];
     //fgets(entry, MAXCHAR, file);
-    int rows = atoi(entry);
+    int rows = 0;
+    //if(fscanf(file, "%d",&rows))
+    //int rows = atoi(entry);
     //fgets(entry, MAXCHAR,file);
-    int cols = atoi(entry);
-    Matrix* m = matrix_create(rows, cols);
+    //int cols = atoi(entry);
+    int cols = 0;
+    Matrix* m = malloc(sizeof(Matrix));
+    if(fscanf(file,"%d",&cols) && fscanf(file, "%d", &rows))
+        m = matrix_create(rows, cols);
     for(int i = 0; i < m -> rows; i++)
         for(int j = 0; j < m -> cols; j++)
             {
                 //fgets(entry,MAXCHAR,file);
-                m -> entries[i][j] = strtod(entry, NULL);
+                //m -> entries[i][j] = strtod(entry, NULL);
+                double s = 0;
+                if(fscanf(file,"%lf",&s))
+                    m->entries[i][j] = s;
             }
     printf("Successfully loaded matrix from %s\n", file_string);
     fclose(file);
