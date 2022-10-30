@@ -1,4 +1,4 @@
-#include "image.h"
+#include "../include/image.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,14 +13,14 @@ Image** csv_to_imgs(char* file_string, int number_of_imgs)
     fp = fopen(file_string, "r");
 
     //Read the first line 
-    fgets(row, MAXCHAR, fp);
+    if(fgets(row, MAXCHAR, fp)){};
     int i = 0;
     while (feof(fp) != 1 && i < number_of_imgs)
     {
         imgs[i] = malloc(sizeof(Image));
 
         int j = 0;
-        fgets(row, MAXCHAR, fp);
+        if(fgets(row, MAXCHAR, fp)){};
         char* token = strtok(row, ",");
         imgs[i]->img_data = matrix_create(28,28);
         while(token != NULL)
