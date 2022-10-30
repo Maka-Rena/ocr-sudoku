@@ -124,7 +124,7 @@ int main(int argc, char** argv)
 
     //Hough
     
-    hough_transform(surface, resultangle);
+    hough_transform(surface, resultangle, renderer);
     SDL_Texture* texture_hough = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture_hough == NULL)
 		  errx(EXIT_FAILURE, "%s", SDL_GetError());
