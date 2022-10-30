@@ -31,9 +31,9 @@ void network_print(NeuralNetwork* net)
     printf("# of Hidden: %d\n", net->hidden);
     printf("# of Output: %d\n", net->output);
     printf("Hidden Weights: \n");
-    matrix_print(net->hidden_weights);
+    //matrix_print(net->hidden_weights);
     printf("Output Weights: \n");
-    matrix_print(net->output_weights);
+    //matrix_print(net->output_weights);
 }
 
 void network_free(NeuralNetwork *net) {
@@ -138,9 +138,9 @@ Matrix* network_predict(NeuralNetwork* net, Matrix* input_data)
     //matrix_print(net->hidden_weights);
     //printf("input data");
     //matrix_print(input_data);
-    Matrix* hidden_inputs = dot(transpose(net->hidden_weights), input_data);
+    Matrix* hidden_inputs = dot(net->hidden_weights, input_data);
     Matrix* hidden_outputs = apply(sigmoid, hidden_inputs);
-    Matrix* final_inputs = dot(transpose(net->output_weights), hidden_outputs);
+    Matrix* final_inputs = dot(net->output_weights, hidden_outputs);
     Matrix* final_outputs = apply(sigmoid, final_inputs);
     //Matrix* result = apply(sigmoid,final_inputs);
     Matrix* result = softmax(final_outputs);
