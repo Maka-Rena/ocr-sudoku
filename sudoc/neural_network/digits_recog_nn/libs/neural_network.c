@@ -31,9 +31,9 @@ void network_print(NeuralNetwork* net)
     printf("# of Hidden: %d\n", net->hidden);
     printf("# of Output: %d\n", net->output);
     printf("Hidden Weights: \n");
-    //matrix_print(net->hidden_weights);
+    matrix_print(net->hidden_weights);
     printf("Output Weights: \n");
-    //matrix_print(net->output_weights);
+    matrix_print(net->output_weights);
 }
 
 void network_free(NeuralNetwork *net) {

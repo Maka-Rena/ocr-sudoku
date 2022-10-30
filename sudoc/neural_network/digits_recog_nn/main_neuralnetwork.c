@@ -9,13 +9,12 @@ int main()
     srand(time(NULL));
 
     // TRAINING
-      int number_imgs = 10000;
+      /*int number_imgs = 10000;
       Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/mnist_test.csv", number_imgs);
-      printf("caca\n");
       NeuralNetwork* net = network_create(784, 300, 10, 3.0f);
       network_train_batch_imgs(net, imgs, number_imgs);
       network_save(net, "testing_net");
-      network_print(net);
+      network_print(net);*/
 
     // PREDICTING
     /*int number_imgs = 100;
@@ -30,5 +29,11 @@ int main()
     printf("actual number = %i\n", imgs[5]->label);
     imgs_free(imgs, number_imgs);
     network_free(net);*/
+    
+    // LOADING
+    NeuralNetwork* net = network_load("to_load_dir");
+    network_print(net);
+    network_save(net, "saved_net");
+    network_free(net);
     return 0;
 }
