@@ -44,8 +44,9 @@ void draw_lines(SDL_Surface* surface, int x1, int y1, int x2, int y2, SDL_Render
     int i=1;
     while(i<=step)
     {
-        if (x*w+y < len && x*w+y >0)
-            pixels[x*w+y] = SDL_MapRGB(format, 0, 0, 255);
+        int destination = x*w+y;
+        if (destination < len && destination >0)
+            pixels[destination] = SDL_MapRGB(format, 0, 0, 255);
         x=x+dx;
         y=y+dy;
         i=i+1;
