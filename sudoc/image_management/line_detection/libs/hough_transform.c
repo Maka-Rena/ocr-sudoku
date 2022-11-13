@@ -21,16 +21,41 @@ double radian_To_Degree(double radian)
 
 void draw_lines(SDL_Surface* surface, int x1, int y1, int x2, int y2, SDL_Renderer* renderer)
 {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+    Uint32* pixels = surface->pixels;
+    int w = surface->w;
+    int h = surface ->h;
+    int len = w*h;
+    SDL_PixelFormat* format = surface->format;
+    int dx=abs(x2-x1);
+    int dy=abs(y2-y1);
+ 
+    int step;
+    if(dx>=dy)
+        step=dx;
+    else
+        step=dy;
+ 
+    dx=dx/step;
+    dy=dy/step;
+ 
+    int x = x1;
+    int y = y1;
+ 
+    int i=1;
+    while(i<=step)
+    {
+        if (x*w+y < len && x*w+y >0)
+            pixels[x*w+y] = SDL_MapRGB(format, 0, 0, 255);
+        x=x+dx;
+        y=y+dy;
+        i=i+1;
+    }
     //We draw on the render, but outcome is black probably because we draw a picture on it afterwards
 }
 
 void hough_transform(SDL_Surface* surface, double* resultangle, SDL_Renderer* renderer)
 {
     float threshold = 0.4;
-
-
 
     Uint32* pixels = surface->pixels;
     SDL_PixelFormat* format = surface->format;
@@ -101,6 +126,10 @@ void hough_transform(SDL_Surface* surface, double* resultangle, SDL_Renderer* re
 
     int j = 0;
 
+    for (int i = 0;i< len;i++)
+    {
+        pixels[i] = 0;
+    }
     while (j < accu_h)
     {
         int i = 0;
