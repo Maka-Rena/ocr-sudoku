@@ -7,7 +7,7 @@ LDFLAGS =
 LDLIBS = `pkg-config --libs sdl2 SDL2_image ` -lm
 SOLVER_DIR = grid_analysis
 
-SRC = ${wildcard ./includes/*.c} ${wildcard ./libs/*.c} ${wildcard main_detection.c}
+SRC = ${wildcard ./includes/*.c} ${wildcard ./libs/*.c} ${wildcard hough_transform.c}
 OBJ = ${SRC:.c=.o}
 EXE = ${SRC:.c=}
 
@@ -17,7 +17,7 @@ all: build
 
 build: ${OBJ}
 
-	@$(CC) -o main_detection $^ $(LDFLAGS) $(LDLIBS)
+	@$(CC) -o hough_transform $^ $(LDFLAGS) $(LDLIBS)
 
 clean:
 	${RM} ${OBJ}
