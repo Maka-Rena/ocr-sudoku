@@ -56,19 +56,30 @@ Matrix* matrix_copy(Matrix* m)
 
 void matrix_save(Matrix* m, char* file_string)
 {
-    FILE* file = fopen(file_string, "w");
+    /*FILE* file = fopen(file_string, "w");
     fprintf(file, "%d\n", m -> rows);
     fprintf(file, "%d\n", m -> cols);
     for(int i = 0; i < m -> rows; i++)
         for(int j = 0; j < m -> cols; j++)
             fprintf(file, "%.6f\n", m -> entries[i][j]);
     printf("Successfully saved matrix to %s\n", file_string);
-    fclose(file);
+    fclose(file);*/
+
+    FILE* file = fopen(file_string, "w");
+	fprintf(file, "%d\n", m->rows);
+	fprintf(file, "%d\n", m->cols);
+	for (int i = 0; i < m->rows; i++) {
+		for (int j = 0; j < m->cols; j++) {
+			fprintf(file, "%.6f\n", m->entries[i][j]);
+		}
+	}
+	printf("Successfully saved matrix to %s\n", file_string);
+	fclose(file);
 }
 
 Matrix* matrix_load(char* file_string)
 {
-    FILE* file = fopen(file_string, "r");
+    /*FILE* file = fopen(file_string, "r");
     //char entry[MAXCHAR];
     //fgets(entry, MAXCHAR, file);
     int rows = 0;
@@ -83,15 +94,38 @@ Matrix* matrix_load(char* file_string)
     for(int i = 0; i < m -> rows; i++)
         for(int j = 0; j < m -> cols; j++)
             {
-                //fgets(entry,MAXCHAR,file);
-                //m -> entries[i][j] = strtod(entry, NULL);
+                fgets(entry,MAXCHAR,file);
+                m -> entries[i][j] = strtod(entry, NULL);
                 double s = 0;
                 if(fscanf(file,"%lf",&s))
                     m->entries[i][j] = s;
             }
     printf("Successfully loaded matrix from %s\n", file_string);
     fclose(file);
-    return m;
+    return m;*/
+    
+    FILE* file = fopen(file_string, "r");
+	char entry[MAXCHAR];
+
+    printf("carré\n");
+	fgets(entry, MAXCHAR, file);
+	
+    int rows = atoi(entry);
+	fgets(entry, MAXCHAR, file);
+	int cols = atoi(entry);
+    printf("ntr\n");
+    printf("cols = %i\n", cols);
+	Matrix* m = matrix_create(rows, cols);
+
+	for (int i = 0; i < m->rows; i++) {
+		for (int j = 0; j < m->cols; j++) {
+			fgets(entry, MAXCHAR, file);
+			m->entries[i][j] = strtod(entry, NULL);
+		}
+	}
+	printf("Sucessfully loaded matrix from %s\n", file_string);
+	fclose(file);
+	return m;
 }
 
 double uniform_distribution(double low, double high)
