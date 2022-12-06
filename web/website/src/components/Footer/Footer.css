@@ -1,0 +1,18 @@
+.footer-container{
+    width: 100%;
+    margin-top: 50px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: #F8F9FA;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.footer-text{
+    font-size: 12px;
+    font-weight: 600;
+    flex: 0.5;
+    text-align: center;
+}
