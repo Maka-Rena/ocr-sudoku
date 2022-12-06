@@ -127,6 +127,8 @@ int main(int argc, char** argv)
     if (surface == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
+    IMG_SavePNG(surface, "../../../web/website/src/components/assests/process/step0.png");
+
     // - Resize the window according to the size of the image.
     SDL_SetWindowSize(window, surface->w, surface->h);
     
@@ -138,11 +140,12 @@ int main(int argc, char** argv)
     // - Convert the surface into grayscale.
     Surface_To_Grayscale(surface);
 
+    IMG_SavePNG(surface, "../../../web/website/src/components/assests/process/step1.png");
+
     // - Create a new texture from the grayscale surface.
     SDL_Texture* texture_gray = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture_gray == NULL)
 		  errx(EXIT_FAILURE, "%s", SDL_GetError());
-
     /*contrast(surface);
 
     SDL_Texture* contrasted_texture = SDL_CreateTextureFromSurface(renderer, surface);*/
@@ -154,9 +157,10 @@ int main(int argc, char** argv)
     SDL_Texture* texture_blurred = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture_blurred == NULL)
 		  errx(EXIT_FAILURE, "%s", SDL_GetError());
+    IMG_SavePNG(surface, "../../../web/website/src/components/assests/process/step2.png");
 
     blackandwhite(surface);
-
+    IMG_SavePNG(surface, "../../../web/website/src/components/assests/process/step3.png");
     SDL_Texture* texture_blackandwhite = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture_blackandwhite == NULL)
 		  errx(EXIT_FAILURE, "%s", SDL_GetError());
@@ -171,7 +175,7 @@ int main(int argc, char** argv)
 		  errx(EXIT_FAILURE, "%s", SDL_GetError());
 
     //to save the blurred image in a png file
-    IMG_SavePNG(surface, "final_picture.png");
+    IMG_SavePNG(surface, "../../../web/website/src/components/assests/process/step4.png");
 
     // - Free the surface.
     SDL_FreeSurface(surface);
