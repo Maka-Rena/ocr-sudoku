@@ -1,13 +1,13 @@
-#Makefile
+ #Makefile
 
 CC = gcc
 CPPFLAGS =
-CFLAGS = -Wall -Wextra -g `pkg-config --cflags sdl2 SDL2_image `
+CFLAGS = -Wall -Wextra `pkg-config --cflags sdl2 SDL2_image `
 LDFLAGS =
 LDLIBS = `pkg-config --libs sdl2 SDL2_image ` -lm
-SOLVER_DIR = grid_analysis
+SOLVER_DIR = line_detection
 
-SRC = ${wildcard ./includes/*.c} ${wildcard ./libs/*.c} ${wildcard hough_transform.c}
+SRC = ${wildcard ./includes/*.c} ${wildcard ./libs/*.c} ${wildcard ../libraries/matrix_lib/matrix.c} ${wildcard main_hough.c} #only file matrix.c to have only one main
 OBJ = ${SRC:.c=.o}
 EXE = ${SRC:.c=}
 
@@ -16,12 +16,12 @@ EXE = ${SRC:.c=}
 all: build
 
 build: ${OBJ}
-
-	@$(CC) -o hough_transform $^ $(LDFLAGS) $(LDLIBS)
+#@$(CC) -o $(SRC_GRID_ANALYSIS) $^ $(LDFLAGS) $(LDLIBS)
+#@$(CC) $(OBJ) -lm -o $(EXE)
+	@$(CC) -o main_hough $^ $(LDFLAGS) $(LDLIBS)
 
 clean:
 	${RM} ${OBJ}
 	${RM} ${EXE}
-	${RM} final_picture.png
 #End Makefile
 

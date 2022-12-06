@@ -1,0 +1,22 @@
+{
+  "name": "api-website",
+  "version": "1.0.0",
+  "description": "API for OCR Maka Rena web site.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maka-Rena/api-website.git"
+  },
+  "author": "Maka Rena",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Maka-Rena/api-website/issues"
+  },
+  "homepage": "https://github.com/Maka-Rena/api-website#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

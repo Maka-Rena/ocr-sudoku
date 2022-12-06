@@ -30,7 +30,7 @@ SOLVER_OBJ := ${SOLVER_SRC:.c=.o}
 
 .PHONY: build all
 
-all: build build-solver build-test clean-sudoc clean-test
+all: build build-solver build-test build-web clean-sudoc clean-test
 
 # BUILD
 build: $(OBJ)
@@ -45,6 +45,14 @@ build-solver: $(SOLVER_OBJ)
 	@mkdir -p $(BUILD_DIR)
 	@$(CC) -o $(BUILD_DIR)/$(EXEC_SOLVER) $^ $(LDFLAGS) $(LDLIBS)
 
+build-web:
+#	@nix-shell -p nodejs-18_x
+	@cd web/website/src/components/assets/ && mkdir process && cd ../../../ && npm install && npm run start
+
+build-api:
+#	@nix-shell -p nodejs-18_x
+	@cd web/api/ && npm install && clear && node index.js
+
 # RUN
 run: build clean-sudoc
 	@./$(BUILD_DIR)/$(EXEC)
@@ -52,6 +60,11 @@ run: build clean-sudoc
 test: build-test
 	@./$(BUILD_DIR)/$(EXEC_TEST)
 
+web: build-web
+	@echo "Starting Web"
+
+api: build-api
+	@echo "Starting API"
 # CLEAN
 clean-sudoc:
 	${RM} ${OBJ}
@@ -65,5 +78,8 @@ clean-solver:
 clean-data:
 	${RM} -rf ${TEST_DATA_DIR}
 
-clean: clean-sudoc clean-test clean-solver clean-data
+clean-web: 
+	@cd web/website/src/components/assets/ && rm -rf process/
+
+clean: clean-sudoc clean-test clean-solver clean-data clean-web
 	${RM} -r $(BUILD_DIR)
