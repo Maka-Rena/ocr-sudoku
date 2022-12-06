@@ -19,5 +19,5 @@ clean:
 	${RM} ${OBJ}
 	${RM} ${EXE}
 	${RM} main_neuralnetwork
-	${RM} -r testing_net saved_net
+	${RM} -r testing_net
 # END

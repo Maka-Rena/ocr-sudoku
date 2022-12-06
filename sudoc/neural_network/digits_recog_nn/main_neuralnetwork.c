@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <err.h>
 #include <string.h>
 #include "include/neural_network.h"
 #include "include/load_and_save.h"
@@ -8,6 +9,8 @@
 int main(int argc, char** argv)
 {
     srand(time(NULL));
+    if(argc > 2 || argc < 1)
+        errx(1, "Wrong number of arguments !");
     if(strcmp(argv[1], "train") == 0)
         // TRAINING
     {
@@ -21,12 +24,15 @@ int main(int argc, char** argv)
         network_free(net);
     }
     // PREDICTING
-    if(strcmp((argv[1]), "predict") == 0 )
+    if(strcmp((argv[1]), "predict") == 0)
     {
         int number_imgs = 10000;
         Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/mnist_test.csv", number_imgs);
+        printf("ntmmmmm\n");
         NeuralNetwork* net = network_load("testing_net");
+        printf("On est ok !\n");
         double score = network_predict_imgs(net, imgs, 10000);
+        
         printf("Score: %1.5f\n", score);
         
         network_free(net);

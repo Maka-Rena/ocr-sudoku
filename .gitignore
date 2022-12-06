@@ -58,7 +58,7 @@ Mkfile.old
 dkms.conf
 
 # VS Code files
-/.vscode
+*.vscode
 
 # executable files
 build

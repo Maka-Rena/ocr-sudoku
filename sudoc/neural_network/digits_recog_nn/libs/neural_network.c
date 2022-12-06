@@ -31,9 +31,9 @@ void network_print(NeuralNetwork* net)
     printf("# of Hidden: %d\n", net->hidden);
     printf("# of Output: %d\n", net->output);
     printf("Hidden Weights: \n");
-    matrix_print(net->hidden_weights);
+    //matrix_print(net->hidden_weights);
     printf("Output Weights: \n");
-    matrix_print(net->output_weights);
+    //matrix_print(net->output_weights);
 }
 
 void network_free(NeuralNetwork *net) {
@@ -43,7 +43,8 @@ void network_free(NeuralNetwork *net) {
     net = NULL;
 }
 
-void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
+void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) 
+{
     // Feed forward
     Matrix* hidden_inputs = dot(net->hidden_weights, input);
     Matrix* hidden_outputs = apply(sigmoid, hidden_inputs);
@@ -55,13 +56,14 @@ void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
     Matrix* hidden_errors = dot(transpose(net->output_weights), output_errors);
 
     // Backpropogate
-    // output_weights = add(output_weights,scale(net->learning_rate,dot(multiply(output_errors,sigmoidPrime(final_outputs)),transpose(hidden_outputs))));
+    //Matrix *output_weights = add(output_weights,scale(net->learning_rate,dot(multiply(output_errors,sigmoidPrime(final_outputs)),transpose(hidden_outputs))));
     Matrix* sigmoid_primed_mat = sigmoidPrime(final_outputs);
     Matrix* multiplied_mat = multiply(output_errors, sigmoid_primed_mat);
+    //Matrix* hidden_errors = dot(transpose(net->output_weights), multiplied_mat);
     Matrix* transposed_mat = transpose(hidden_outputs);
     Matrix* dot_mat = dot(multiplied_mat, transposed_mat);
     Matrix* scaled_mat = scale(net->learning_rate, dot_mat);
-    Matrix* added_mat = add(net->output_weights, scaled_mat);
+    Matrix* added_mat = add(net->output_weights, scaled_mat); // was add
     matrix_free(net->output_weights); // Free the old weights before replacing
     net->output_weights = added_mat;
 
@@ -71,14 +73,14 @@ void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
     matrix_free(dot_mat);
     matrix_free(scaled_mat);
 
-    // hidden_weights = add(net->hidden_weights, scale(net->learning_rate, dot(multiply(hidden_errors,sigmoidPrime(hidden_outputs)),transpose(inputs))));
+    //Matrix *hidden_weights = add(net->hidden_weights, scale(net->learning_rate, dot(multiply(hidden_errors,sigmoidPrime(hidden_outputs)),transpose(input))));
     // Reusing variables after freeing memory
     sigmoid_primed_mat = sigmoidPrime(hidden_outputs);
     multiplied_mat = multiply(hidden_errors, sigmoid_primed_mat);
     transposed_mat = transpose(input);
     dot_mat = dot(multiplied_mat, transposed_mat);
     scaled_mat = scale(net->learning_rate, dot_mat);
-    added_mat = add(net->hidden_weights, scaled_mat);
+    added_mat = add(net->hidden_weights, scaled_mat);// was add
     matrix_free(net->hidden_weights); // Free the old hidden_weights before replacement
     net->hidden_weights = added_mat; 
 
@@ -99,7 +101,8 @@ void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) {
 
 void network_train_batch_imgs(NeuralNetwork* net, Image** imgs, int batch_size) 
 {
-    for (int i = 0; i < batch_size; i++) {
+    for(int j = 0 ; j < 10; j++)
+    {for (int i = 0; i < batch_size; i++) {
         if (i % 100 == 0) printf("Img No. %d\n", i);
         Image* cur_img = imgs[i];
         Matrix* img_data = matrix_flatten(cur_img->img_data, 0); // 0 = flatten to column vector
@@ -108,13 +111,16 @@ void network_train_batch_imgs(NeuralNetwork* net, Image** imgs, int batch_size)
         network_train(net, img_data, output);
         matrix_free(output);
         matrix_free(img_data);
-    }
+    }}
 }
 
 Matrix* network_predict_img(NeuralNetwork* net, Image* img) 
 {
+    printf("Pour l'instant c'est bon\n");
     Matrix* img_data = matrix_flatten(img->img_data, 0);
+    printf("Toujours bon !\n");
     Matrix* res = network_predict(net, img_data);
+    printf("Toujours  toujours bon !\n");
     matrix_free(img_data);
     return res;
 }
@@ -122,7 +128,8 @@ Matrix* network_predict_img(NeuralNetwork* net, Image* img)
 double network_predict_imgs(NeuralNetwork* net, Image** imgs, int n) 
 {
     int n_correct = 0;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) 
+    {
         Matrix* prediction = network_predict_img(net, imgs[i]);
         if (matrix_argmax(prediction) == imgs[i]->label) {
             n_correct++;
@@ -138,11 +145,16 @@ Matrix* network_predict(NeuralNetwork* net, Matrix* input_data)
     //matrix_print(net->hidden_weights);
     //printf("input data");
     //matrix_print(input_data);
-    Matrix* hidden_inputs = dot(net->hidden_weights, input_data);
+    //printf("input_data : row = %i  col = %i\n",input_data->rows,input_data->cols);
+    //printf("hidden_weights : row = %i  col = %i\n", net->hidden_weights->rows, net->hidden_weights->cols);
+    printf("tu casse les c\n");
+    Matrix* hidden_inputs = dot(net->hidden_weights, input_data);// first arg should not be transposed but was
+    printf("tu casse tjrs les c\n");
     Matrix* hidden_outputs = apply(sigmoid, hidden_inputs);
-    Matrix* final_inputs = dot(net->output_weights, hidden_outputs);
-    Matrix* final_outputs = apply(sigmoid, final_inputs);
-    //Matrix* result = apply(sigmoid,final_inputs);
-    Matrix* result = softmax(final_outputs);
+    printf("ntm\n");
+    Matrix* final_inputs = dot(net->output_weights, hidden_outputs); // first arg should not be transposed but was
+    //Matrix* final_outputs = apply(sigmoid, final_inputs);
+    Matrix* result = apply(sigmoid,final_inputs);
+    //Matrix* result = softmax(final_outputs);
     return result;
 }
