@@ -4,8 +4,7 @@
   "description": "API for OCR Maka Rena web site.",
   "main": "index.js",
   "scripts": {
-    "test": "test",
-    "dev": "nodemon index.js"
+    "test": "test"
   },
   "repository": {
     "type": "git",
@@ -18,10 +17,6 @@
   },
   "homepage": "https://github.com/Maka-Rena/api-website#readme",
   "dependencies": {
-    "express": "^4.18.2",
-    "multer": "^1.4.5-lts.1"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.20"
+    "express": "^4.18.2"
   }
 }
