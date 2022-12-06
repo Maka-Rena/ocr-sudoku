@@ -1,7 +1,8 @@
 # Makefile
 CC = gcc
-CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image` 
+CFLAGS = -Wall -Wextra -g -O3 `pkg-config --cflags sdl2 SDL2_image` 
 LDFLAGS := -lm
+LDLIBS = `pkg-config --libs sdl2 SDL2_image ` -lm
 
 
 SRC = ${wildcard ../../libraries/matrix_lib/libs/*.c} ${wildcard ../../libraries/data_set_lib/libs/*.c} ${wildcard ./libs/*.c} ${wildcard main_neuralnetwork.c}
