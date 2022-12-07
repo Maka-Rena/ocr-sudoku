@@ -13,9 +13,15 @@ EXEC_SOLVER := solver
 BUILD_DIR := build
 #TEST_DATA_DIR := ./tests/out
 
-SRC := ./sudoc/main.c
+SRC := ./sudoc/main.c ${wildcard ./sudoc/grid_analysis/libs/*.c} \
+					  ${wildcard ./sudoc/image_management/crop/libs/*.c} \
+					  ${wildcard ./sudoc/image_management/crop_to_ia/libs/*.c} \
+					  ${wildcard ./sudoc/image_management/image_treatment/libs/*.c} \
+					  ${wildcard ./sudoc/image_management/line_detection/*.c} \
+					  ${wildcard ./sudoc/libraries/data_set_lib/libs/*.c} \
+					  
 
-SOLVER_SRC :=	${wildcard ./sudoc/solver/libs/*.c} ./sudoc/solver/solverMain.c
+SOLVER_SRC := ${wildcard ./sudoc/solver/libs/*.c} ./sudoc/solver/solverMain.c
 
 TEST_SRC :=	${wildcard ./sudoc/solver/libs/*.c} \
 			${wildcard ./sudoc/tests/libs/*.c} \
@@ -47,7 +53,7 @@ build-solver: $(SOLVER_OBJ)
 
 build-web:
 #	@nix-shell -p nodejs-18_x
-	@cd web/website/src/components/assets/ && mkdir process && cd ../../../ && npm install && npm run start
+	@cd web/website/src/components/assets/ && mkdir process && cp ../../../../../pictures/image_06.jpeg process/ && cd ../../../ && npm install && npm run start
 
 build-api:
 #	@nix-shell -p nodejs-18_x
@@ -65,6 +71,7 @@ web: build-web
 
 api: build-api
 	@echo "Starting API"
+
 # CLEAN
 clean-sudoc:
 	${RM} ${OBJ}

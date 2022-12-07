@@ -127,6 +127,7 @@
 .upload-term-container{
     margin-top: 20px;
     margin-bottom: 20px;
+    padding-top: 10px;
     display: flex;
     flex-direction: column;
     padding-left: 10px;
@@ -135,17 +136,14 @@
     border-radius: 10px;
 }
 .term-origin{
-    margin-top: 10px;
-    margin-bottom: 10px;
     width: 100%;
     color: #F8F9FA;
     font-size: 15px;
     font-weight: 800;
 }
 .upload-term-line{
-    margin-top: 10px;
-    margin-bottom: 10px;
     width: 100%;
+    margin-bottom: 5px;
     color: #fcff4a;
     font-size: 15px;
     font-weight: 600;

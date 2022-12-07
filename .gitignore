@@ -76,6 +76,8 @@ build
 # production
 /build
 
+process/
+
 # misc
 .DS_Store
 .env.local
