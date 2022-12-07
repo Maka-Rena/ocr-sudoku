@@ -158,7 +158,7 @@ int main(int argc, char** argv)
     if (texture_blurred == NULL)
 		  errx(EXIT_FAILURE, "%s", SDL_GetError());
 
-    blackandwhite(surface);
+    //blackandwhite(surface);
 
     SDL_Texture* texture_blackandwhite = SDL_CreateTextureFromSurface(renderer, surface);
     IMG_SavePNG(surface, "../../../web/website/src/components/process/step3.png");
@@ -166,10 +166,10 @@ int main(int argc, char** argv)
 		  errx(EXIT_FAILURE, "%s", SDL_GetError());
 
 
-	  // - Convert the surface into sobel surface 
-	  Kernel_Convolution_Sobel(surface);
+	// - Convert the surface into sobel surface 
+	Kernel_Convolution_Sobel(surface);
 
-	  // - Create a new texture from the sobel surface.
+	// - Create a new texture from the sobel surface.
     SDL_Texture* texture_sobel = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture_sobel == NULL)
 		  errx(EXIT_FAILURE, "%s", SDL_GetError());
