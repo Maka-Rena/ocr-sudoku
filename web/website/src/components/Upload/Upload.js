@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import "./Upload.css";
 import upload from "../assets/upload.png";
 import axios from 'axios';
@@ -8,8 +8,6 @@ const Upload = () => {
     const [file, setFile] = useState("");
     const [filename, setFilename] = useState("");
     const [progress, setProgress] = useState(0);
-    const [step, setStep] = useState(1);
-    const [processState, setProcessState] = useState(["⏳ -- Starting process..."]);
 
     const handleChange = (e) => {
         setFilename(e.target.files[0].name);
@@ -18,7 +16,9 @@ const Upload = () => {
     const [result, setResult] = useState([]);
 
     const handleSubmit = async () => {
+        //setGo(true);
         console.log("FILE : ", filename);
+        // API call
         axios.get("http://localhost:3001/?filename=" + filename, {
             progressEvent: (e) => {
                 setProgress(Math.round((e.loaded * 100) / e.total));
@@ -42,22 +42,6 @@ const Upload = () => {
             });
     };
 
-    useEffect(() => {
-        if (step === 1) {
-            setProcessState(["⏳ -- Starting process...", "⏳ -- Loading image..."]);
-        }
-        if (step === 2) {
-            setProcessState(["⏳ -- Starting process...", "✅ -- Image loaded", "⏳ -- Processing image..."]);
-        }
-        if (step === 3) {
-            setProcessState(["⏳ -- Starting process...", "✅ -- Image loaded", "✅ -- Image processed", "⏳ -- Solving sudoku..."]);
-        }
-        if (step === 4) {
-            setProcessState(["⏳ -- Starting process...", "✅ -- Image loaded", "✅ -- Image processed", "✅ -- Sudoku solved", "✅ -- Done"]);
-        }
-        console.log("step : ", step);
-    }, [step]);
-
     return (
         <div class="upload-container" id="upload">
             <div class="upload-first-row">
@@ -76,13 +60,13 @@ const Upload = () => {
             {go && file !== "" && (
                 <>
                     <div class="upload-file-process">
-                        <div class="upload-result" style={{ marginRight: 10 }}>
+                        <div class="upload-result" style={{ marginRight: 20 }}>
                             <p class="upload-file-process-title">Initial</p>
                             <img class="upload-file-process-image" src={file} alt="preview" />
                         </div>
-                        <div class="upload-result" style={{ marginLeft: 10 }}>
+                        <div class="upload-result">
                             <p class="upload-file-process-title">Result</p>
-                            {step === 4 && (<div class="result-list-container">
+                            <div class="result-list-container">
                                 {result.map((item, index) => {
                                     return (
                                         <div class="result-list" key={index}>
@@ -94,20 +78,14 @@ const Upload = () => {
                                                 )
                                             }
                                             )}
-                                        </div>)
+                                        </div>
+                                    )
                                 })}
-                            </div>)}
-                            {step !== 2 && (<img class="upload-file-process-image" src={require("../assets/process/"+step+".jpeg") } alt="preview" />)}
+                            </div>
                         </div>
                     </div>
                     <div class="upload-term-container">
-                        {
-                            processState.map((item, index) => {
-                                return (
-                                    <div class="upload-term-line" key={index}><span class="term-origin">{" >> ocr-sudoku/$"}</span> {item}</div>
-                                )
-                            }
-                        )}
+                        <p class="upload-term-line"><span class="term-origin">{" >> ocr-sudoku/$"}</span> HELLO</p>
                     </div>
                 </>)}
         </div>
