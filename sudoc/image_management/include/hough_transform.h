@@ -39,7 +39,6 @@ Image *CV_INIT(int channels, int height, int width);
 Image *CV_COPY(const Image *src);
 Image *CV_SURFACE_TO_IMG(SDL_Surface *surface);
 SDL_Surface *CV_IMG_TO_SURFACE(const Image *image);
-SDL_Surface* Load_image(const char* path);
 Uint32 CV_RGB(Uint8 r, Uint8 g, Uint8 b);
 
 int *CV_HOUGH_LINES(const Image *src, int threshold, int *nlines);
