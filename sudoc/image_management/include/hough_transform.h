@@ -41,8 +41,10 @@ Image *CV_SURFACE_TO_IMG(SDL_Surface *surface);
 SDL_Surface *CV_IMG_TO_SURFACE(const Image *image);
 Uint32 CV_RGB(Uint8 r, Uint8 g, Uint8 b);
 
-int *CV_HOUGH_LINES(const Image *src, int threshold, int *nlines);
-int *CV_MERGE_LINES(int *lines, int nlines, int threshold, int *n);
-Image *CV_DRAW_POINT(const Image *src, Image *dst, int x, int y, int width, Uint32 color);
-Image *CV_DRAW_LINE(const Image *src, Image *dst, int x1, int y1, int x2, int y2, int width, Uint32 color);
-Image *CV_DRAW_LINES(const Image *src, Image *dst, int *lines, int nlines, int weight, Uint32 color);
+int *Hough_lines(const Image *src, int threshold, int *nlines);
+int *Hough_merge_lines(int *lines, int nlines, int threshold, int *n);
+Image *Hough_draw_point(const Image *src, Image *dst, int x, int y, int width, Uint32 color);
+Image *Hough_draw_line(const Image *src, Image *dst, int x1, int y1, int x2, int y2, int width, Uint32 color);
+Image *Hough_draw_lines(const Image *src, Image *dst, int *lines, int nlines, int weight, Uint32 color);
+
+float Find_orientation(int *lines, int nlines);
