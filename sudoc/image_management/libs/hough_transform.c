@@ -121,7 +121,7 @@ SDL_Surface *CV_IMG_TO_SURFACE(const Image *image)
 /// @param threshold The threshold value, representing the minimum number of intersections to detect a line
 /// @param nlines The number of lines that will be returned.
 /// @return An array of lines where 2n is rho and 2n+1 is theta.
-int *CV_HOUGH_LINES(const Image *src, int threshold, int *nlines)
+int *Hough_lines(const Image *src, int threshold, int *nlines)
 {
     *nlines = 0;
 
@@ -216,7 +216,7 @@ int *CV_HOUGH_LINES(const Image *src, int threshold, int *nlines)
 /// @param threshold The threshold value to merge lines
 /// @param n The number of merged lines
 /// @return An array of simplified lines where 2n is rho and 2n+1 is theta.
-int *CV_MERGE_LINES(int *lines, int nlines, int threshold, int *n)
+int *Hough_merge_lines(int *lines, int nlines, int threshold, int *n)
 {
     *n = 0;
 
@@ -265,10 +265,10 @@ Uint32 CV_RGB(Uint8 r, Uint8 g, Uint8 b)
     return color | r << 16 | g << 8 | b;
 }
 
-Image *CV_DRAW_POINT(const Image *src, Image *dst, int x, int y, int width, Uint32 color)
+Image *Hough_draw_point(const Image *src, Image *dst, int x, int y, int width, Uint32 color)
 {
     if (src == NULL)
-        errx(1, "CV_DRAW_POINT: src is NULL");
+        errx(1, "Hough_draw_point: src is NULL");
 
     if (x < 0 || x >= dst->w || y < 0 || y >= dst->h)
         return dst;
@@ -291,7 +291,7 @@ Image *CV_DRAW_POINT(const Image *src, Image *dst, int x, int y, int width, Uint
     return dst;
 }
 
-Image *CV_DRAW_LINE(const Image *src, Image *dst, int x1, int y1, int x2, int y2, int width, Uint32 color)
+Image *Hough_draw_line(const Image *src, Image *dst, int x1, int y1, int x2, int y2, int width, Uint32 color)
 {
 
     int dx = abs(x2 - x1);
@@ -304,7 +304,7 @@ Image *CV_DRAW_LINE(const Image *src, Image *dst, int x1, int y1, int x2, int y2
     {
         for (int i = 0; i < width; i++)
             for (int j = 0; j < width; j++)
-                CV_DRAW_POINT(src, dst, x1 + i, y1 + j, width, color);
+                Hough_draw_point(src, dst, x1 + i, y1 + j, width, color);
 
         if (x1 == x2 && y1 == y2)
             break;
@@ -333,7 +333,7 @@ Image *CV_DRAW_LINE(const Image *src, Image *dst, int x1, int y1, int x2, int y2
 /// @param weight The weight of the lines
 /// @param color The color of the lines
 /// @return The destination image
-Image *CV_DRAW_LINES(const Image *src, Image *dst, int *lines, int nlines, int weight, Uint32 color)
+Image *Hough_draw_lines(const Image *src, Image *dst, int *lines, int nlines, int weight, Uint32 color)
 {
 
     for (int i = 0; i < nlines; i++)
@@ -342,7 +342,7 @@ Image *CV_DRAW_LINES(const Image *src, Image *dst, int *lines, int nlines, int w
         int theta = lines[i * 2 + 1];
 
         if (theta == 0)
-            CV_DRAW_LINE(src, dst, rho, 0, rho, dst->h, weight, color);
+            Hough_draw_line(src, dst, rho, 0, rho, dst->h, weight, color);
         else
         {
             // y = mx + p
@@ -358,9 +358,40 @@ Image *CV_DRAW_LINES(const Image *src, Image *dst, int *lines, int nlines, int w
             double x2 = x0 - 2000 * (-b);
             double y2 = y0 - 2000 * a;
 
-            CV_DRAW_LINE(src, dst, x1, y1, x2, y2, weight, color);
+            Hough_draw_line(src, dst, x1, y1, x2, y2, weight, color);
         }
     }
 
     return dst;
 }
+
+/// @brief Find the orientation of an image using lines.
+/// @param lines The lines array
+/// @param nlines The number of lines
+/// @return The orientation of the image in degrees.
+float Find_orientation(int *lines, int nlines)
+{
+    int *histo = (int *)malloc(sizeof(int) * 180);
+    memset(histo, 0, sizeof(int) * 180);
+
+    for (int i = 0; i < nlines; i++)
+    {
+        int theta = lines[i * 2 + 1];
+        histo[theta]++;
+    }
+
+    int max = 0;
+    int max_theta = 0;
+    for (int i = 0; i < 180; i++)
+    {
+        if (histo[i] > max)
+        {
+            max = histo[i];
+            max_theta = i;
+        }
+    }
+
+    FREE(histo);
+    return max_theta;
+}
+

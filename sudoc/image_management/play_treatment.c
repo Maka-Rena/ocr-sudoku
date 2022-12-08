@@ -55,10 +55,10 @@ int main(int argc, char** argv)
 	Kernel_Convolution(surface);
     IMG_SavePNG(surface, "blurred.png");
 
-    //blackandwhite(surface);
-
     contrast(surface);
     IMG_SavePNG(surface, "contrast.png");
+    blackandwhite(surface);
+    IMG_SavePNG(surface, "black_n_white.png");
     
     // - Convert the surface into sobel surface 
 	Kernel_Convolution_Sobel(surface);
@@ -70,9 +70,16 @@ int main(int argc, char** argv)
 
     //Hough Transform call
     int n = 0;
-    int *lines = CV_HOUGH_LINES(image, 300, &n);
-    int *merged = CV_MERGE_LINES(lines, n, 35, &n);
-    CV_DRAW_LINES(image, image, merged, n, 2, CV_RGB(255, 0, 0));
+    int *lines = Hough_lines(image, 300, &n);
+    int *merged = Hough_merge_lines(lines, n, 35, &n);
+    float angle = Find_orientation(merged, n);
+    printf("Angle: %f",angle);
+    if (angle > 90 && angle < 135)
+        angle = angle - 90;
+    else if (angle > 135)
+        angle = angle - 180;
+    printf("Angle: %f",angle);
+    Hough_draw_lines(image, image, merged, n, 2, CV_RGB(255, 0, 0));
 
     // - Save the image.
     surface = CV_IMG_TO_SURFACE(image);
