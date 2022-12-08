@@ -8,6 +8,8 @@ const Upload = () => {
     const [file, setFile] = useState("");
     const [filename, setFilename] = useState("");
     const [progress, setProgress] = useState(0);
+    const [step, setStep] = useState(0);
+    const [processState, setProcessState] = useState(["⏳ -- Starting process..."]);
 
     const handleChange = (e) => {
         setFilename(e.target.files[0].name);
@@ -16,30 +18,71 @@ const Upload = () => {
     const [result, setResult] = useState([]);
 
     const handleSubmit = async () => {
-        //setGo(true);
         console.log("FILE : ", filename);
-        // API call
         axios.get("http://localhost:3001/?filename=" + filename, {
             progressEvent: (e) => {
                 setProgress(Math.round((e.loaded * 100) / e.total));
             }
-        })
-            .then(res => {
-                const arr = res.data;
-                let result = [];
-                for (let i = 0; i < 9; i++) {
-                    let temp = [];
-                    for (let j = 0; j < 9; j++) {
-                        temp.push(arr.array[i * 9 + j]);
-                    }
-                    result.push(temp);
+        }).then(res => {
+                if (res.data === "OK")
+                {
+                    console.log("Starting process... : ", res.data)
+                    setGo(true);
                 }
-                setResult(result);
-                setGo(true);
             })
             .catch(err => {
                 console.log(err);
             });
+    };
+
+    const checkStep = () => {
+        axios.get("http://localhost:3001/step?currentStep=" + step)
+            .then(res => {
+                setStep(res.data.step);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        if (step === 1 || step === 0) {
+            setProcessState(["⏳ -- Starting process...", "⏳ -- Loading image..."]);
+        }
+        if (step === 2) {
+            setProcessState(["⏳ -- Starting process...", "✅ -- Image loaded", "⏳ -- Processing image..."]);
+        }
+        if (step === 3) {
+            setProcessState(["⏳ -- Starting process...", "✅ -- Image loaded", "✅ -- Image processed", "⏳ -- Solving sudoku..."]);
+        }
+        if (step === 4) {
+            //Get JSON file
+            axios.get("http://localhost:3001/result")
+                .then(res => {
+                    const arr = res.data;
+                    let result = [];
+                    for (let i = 0; i < 9; i++) {
+                        let temp = [];
+                        for (let j = 0; j < 9; j++) {
+                            temp.push(arr.array[i * 9 + j]);
+                        }
+                        result.push(temp);
+                    }
+                    setResult(result);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            setProcessState(["⏳ -- Starting process...", "✅ -- Image loaded", "✅ -- Image processed", "✅ -- Sudoku solved", "✅ -- Done"]);
+        }
+        console.log("step : ", step);        
+    };
+
+    const doubleCheck = () => {
+        try {
+            return require("./process/" + step.toString() + ".jpeg");
+        }
+        catch (err) {
+            console.log("Err : ", err);
+            return require("./loading.gif");
+        }
     };
 
     return (
@@ -60,14 +103,21 @@ const Upload = () => {
             {go && file !== "" && (
                 <>
                     <div class="upload-file-process">
-                        <div class="upload-result" style={{ marginRight: 20 }}>
+                        <div class="upload-result" style={{ marginRight: 10 }}>
                             <p class="upload-file-process-title">Initial</p>
                             <img class="upload-file-process-image" src={file} alt="preview" />
                         </div>
-                        <div class="upload-result">
-                            <p class="upload-file-process-title">Result</p>
+                        <div class="upload-result"  style={{ marginLeft: 10 }}>
+                            <div class="upload-result-right">
+                                <p class="upload-file-process-title">Processing...</p>
+                                <div class="upload-next-step-container">
+                                    <span class="upload-next-step" onClick={() => checkStep()}>
+                                        Next step
+                                    </span>
+                                </div>
+                            </div>
                             <div class="result-list-container">
-                                {result.map((item, index) => {
+                                {step === 4 && result !== [] && (result.map((item, index) => {
                                     return (
                                         <div class="result-list" key={index}>
                                             {item.map((item2, index2) => {
@@ -80,12 +130,25 @@ const Upload = () => {
                                             )}
                                         </div>
                                     )
-                                })}
+                                }))}
                             </div>
+                            {step !== 4 &&
+                                (<img
+                                    class="upload-file-process-image"
+                                    /* eslint-disable-next-line */
+                                    src={doubleCheck()}
+                                    alt="preview"
+                                />)
+                            }
                         </div>
                     </div>
                     <div class="upload-term-container">
-                        <p class="upload-term-line"><span class="term-origin">{" >> ocr-sudoku/$"}</span> HELLO</p>
+                    {processState.map((item, index) => {
+                                return (
+                                    <div class="upload-term-line" key={index}><span class="term-origin">{" >> ocr-sudoku/$"}</span> {item}</div>
+                                )
+                            }
+                        )}
                     </div>
                 </>)}
         </div>
