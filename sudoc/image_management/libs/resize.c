@@ -52,9 +52,8 @@ SDL_Surface* resize(SDL_Surface* surface, unsigned int newwidth, unsigned int ne
     SDL_Surface* resized = SDL_CreateRGBSurface(0, newheight, newwidth, 32,0,0,0,0); 
     Uint32* pixels_surface = surface->pixels;
     Uint32* pix_resized = resized->pixels;
-    int width = surface->w;
-    int height = surface->h;
-    int length = width * height;
+    unsigned int width = surface->w;
+    unsigned int height = surface->h;
 
     double xscale = newwidth / (double)width;
     double yscale = newheight / (double)height;
