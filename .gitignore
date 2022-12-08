@@ -47,6 +47,10 @@
 
 # heavy files
 *.csv
+*.png
+
+# Python files
+*.py
 
 # Kernel Module Compile Results
 *.mod*
