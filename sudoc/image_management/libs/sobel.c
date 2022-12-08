@@ -15,8 +15,9 @@ double find_max(double list[], int len)
 
 int threshold_sob(Uint32* pixels, int length, SDL_PixelFormat* format)
 {
+    //Fing the average britness of the image
     int count = 0;
-    Uint32 *h;
+    Uint32* h;
     h = calloc(256, sizeof(Uint32));
     while (count < length)
     {
@@ -63,7 +64,6 @@ int threshold_sob(Uint32* pixels, int length, SDL_PixelFormat* format)
     }
     free(h);
     return min_i;
-
 }
 
 void __sobel_transformation(SDL_Surface* surface, double* resultgradient)//, Uint32* resultangle) 
@@ -76,7 +76,7 @@ void __sobel_transformation(SDL_Surface* surface, double* resultgradient)//, Uin
     if (format == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
-    int th = threshold_sob(pixels, len, format);
+    //int th = threshold_sob(pixels, len, format);
 
     SDL_LockSurface(surface);
     int count = 0;
@@ -85,7 +85,7 @@ void __sobel_transformation(SDL_Surface* surface, double* resultgradient)//, Uin
         double color = resultgradient[count];
         //<= 50 works for non grayscaled images
         //<= 100 for grayscaled and blurred
-        if (color < th)
+        if (color > 80)
             pixels[count] = SDL_MapRGB(format, 255, 255, 255);
         else
             pixels[count] = SDL_MapRGB(format, 0, 0, 0);
@@ -133,7 +133,7 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface)
         -2, 0, 2, 
         -1, 0, 1};
 
-    double kernely[] = {-1, -2, 1,
+    double kernely[] = {-1, -2, -1,
         0, 0, 0, 
         1, 2, 1};
 
@@ -244,9 +244,7 @@ void Kernel_Convolution_Sobel(SDL_Surface* surface)
                 resx = resx + r * kernelx[8]; 
             }
 
-            resx = pow(resx, 2);
-            resy = pow(resy, 2);
-            result_gradient[i*w+j] = sqrt(resy + resx);
+            result_gradient[i*w+j] = abs(resy) + abs(resx);
 
 			//result_angle[i*w+j] = atan(resy/resx); 
 

@@ -55,8 +55,11 @@ int main(int argc, char** argv)
 	Kernel_Convolution(surface);
     IMG_SavePNG(surface, "blurred.png");
 
-    blackandwhite(surface);
+    //blackandwhite(surface);
 
+    contrast(surface);
+    IMG_SavePNG(surface, "contrast.png");
+    
     // - Convert the surface into sobel surface 
 	Kernel_Convolution_Sobel(surface);
     IMG_SavePNG(surface, "sobel.png");
@@ -68,7 +71,7 @@ int main(int argc, char** argv)
     //Hough Transform call
     int n = 0;
     int *lines = CV_HOUGH_LINES(image, 300, &n);
-    int *merged = CV_MERGE_LINES(lines, n, 50, &n);
+    int *merged = CV_MERGE_LINES(lines, n, 35, &n);
     CV_DRAW_LINES(image, image, merged, n, 2, CV_RGB(255, 0, 0));
 
     // - Save the image.
@@ -79,7 +82,7 @@ int main(int argc, char** argv)
     SDL_FreeSurface(surface);
     CV_FREE(&image);
 
-    free(lines);
-    free(merged);
+    //free(lines);
+    //free(merged);
     return EXIT_SUCCESS;
 }
