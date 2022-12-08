@@ -47,7 +47,7 @@ build-solver: $(SOLVER_OBJ)
 
 build-web:
 #	@nix-shell -p nodejs-18_x
-	@cd web/website/src/components/assets/ && mkdir process && cd ../../../ && npm install && npm run start
+	@cd web/website/src/components/Upload/ && mkdir process && cd ../../../ && npm install && npm run start
 
 build-api:
 #	@nix-shell -p nodejs-18_x
@@ -79,7 +79,7 @@ clean-data:
 	${RM} -rf ${TEST_DATA_DIR}
 
 clean-web: 
-	@cd web/website/src/components/assets/ && rm -rf process/
+	@cd web/website/src/components/Upload && rm -rf process/
 
 clean: clean-sudoc clean-test clean-solver clean-data clean-web
 	${RM} -r $(BUILD_DIR)

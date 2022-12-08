@@ -2,15 +2,12 @@
 const express = require('express');
 const app = express();
 const { exec } = require('child_process');
+const fs = require("fs");
 
 app.use(express.json());
 //GET /?color1=red&color2=blue
 
-app.get("/", (req, res) => {
-  const { filename } = req.query;
-  res.header("Access-Control-Allow-Origin", "*");
-  console.log("FILE : " + filename);
-
+function process (filename) {
   // exec(`cd ../ && ls`, (error, stdout, stderr) => {
   //   if (error) {
   //     //console.error(`error: ${error.message}`);
@@ -25,22 +22,45 @@ app.get("/", (req, res) => {
 
   //   console.log(`stdout:\n${stdout}`);
   // });
+}
 
-  //Create array of 81 integers
-  const array = [];
-  for (let i = 1; i < 82; i++) {
-    array.push(i);
-  }
-
-  let result = {
-    array: array
-  };
-  let r = JSON.stringify(result);
-  console.log(r);
-  res.send(r);
+app.get("/", (req, res) => {
+  const { filename } = req.query;
+  res.header("Access-Control-Allow-Origin", "*");
+  console.log("FILE : " + filename);
+  process(filename);
+  res.send("OK");
   res.end();
 });
 
+app.get("/step", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  const { currentStep } = req.query;
+  //Check if file path : ../website/src/components/assets/process/currentStep+1.jpeg exists
+  //If yes, send currentStep+1
+  //If no, send currentStep
+  let step = currentStep;
+  if (currentStep < 3 && fs.existsSync("../website/src/components/Upload/process/" + (parseInt(currentStep) + 1) + ".jpeg")) {
+    step = parseInt(currentStep) + 1;
+  }
+  else{
+    if (fs.existsSync("../website/src/components/Upload/process/4.json"))
+    {
+      step = 4;
+    }
+  }
+  console.log("STEP sent: " + step);
+  res.send({ step: step });
+  res.end();
+});
+
+app.get("/result", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  let rawdata = fs.readFileSync('../website/src/components/Upload/process/result.json');
+  let result = JSON.parse(rawdata);
+  res.send(result);
+  res.end();
+});
 
 app.listen(3001, () => { 
     console.log('Started on port 3001');
