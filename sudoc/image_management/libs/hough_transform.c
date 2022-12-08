@@ -267,6 +267,8 @@ Uint32 CV_RGB(Uint8 r, Uint8 g, Uint8 b)
 
 Image *CV_DRAW_POINT(const Image *src, Image *dst, int x, int y, int width, Uint32 color)
 {
+    if (src == NULL)
+        errx(1, "CV_DRAW_POINT: src is NULL");
 
     if (x < 0 || x >= dst->w || y < 0 || y >= dst->h)
         return dst;
