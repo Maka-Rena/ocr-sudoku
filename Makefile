@@ -45,12 +45,12 @@ build-solver: $(SOLVER_OBJ)
 	@mkdir -p $(BUILD_DIR)
 	@$(CC) -o $(BUILD_DIR)/$(EXEC_SOLVER) $^ $(LDFLAGS) $(LDLIBS)
 
+build-npm:
+	@nix-shell -p nodejs-18_x
 build-web:
-#	@nix-shell -p nodejs-18_x
 	@cd web/website/src/components/Upload/ && mkdir process && cd ../../../ && npm install && npm run start
 
 build-api:
-#	@nix-shell -p nodejs-18_x
 	@cd web/api/ && npm install && clear && node index.js
 
 # RUN
@@ -59,6 +59,9 @@ run: build clean-sudoc
 
 test: build-test
 	@./$(BUILD_DIR)/$(EXEC_TEST)
+
+npm: build-npm
+	@echo "Starting NPM environment."
 
 web: build-web
 	@echo "Starting Web"
