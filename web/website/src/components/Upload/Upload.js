@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./Upload.css";
 import upload from "../assets/upload.png";
 import axios from 'axios';
@@ -10,6 +10,7 @@ const Upload = () => {
     const [progress, setProgress] = useState(0);
     const [step, setStep] = useState(0);
     const [processState, setProcessState] = useState(["⏳ -- Starting process..."]);
+    const [isHandwrite, setIsHandwrite] = useState(false);
 
     const handleChange = (e) => {
         setFilename(e.target.files[0].name);
@@ -19,7 +20,7 @@ const Upload = () => {
 
     const handleSubmit = async () => {
         console.log("FILE : ", filename);
-        axios.get("http://localhost:3001/?filename=" + filename, {
+        axios.get("http://localhost:3001/?filename=" + filename + "&handwritted=" + (isHandwrite === true).toString(), {
             progressEvent: (e) => {
                 setProgress(Math.round((e.loaded * 100) / e.total));
             }
@@ -85,6 +86,10 @@ const Upload = () => {
         }
     };
 
+    useEffect(() => {
+        console.log("isHandwrite : ", isHandwrite);
+    }, [isHandwrite]);
+
     return (
         <div class="upload-container" id="upload">
             <div class="upload-first-row">
@@ -93,6 +98,8 @@ const Upload = () => {
                     <img class="upload-file-icon" width="60" src={upload} alt="upload icon" />
                     <label for="file" class="upload-file-label">{filename !== "" ? filename : "Choose a file"}</label>
                     <input type="file" id="file" accept="image/*" class="upload-input" onChange={handleChange} />
+                    <label for="handwriteCheck" style={{marginTop: 30}}>Is number handwritten?</label>
+                    <input type="checkbox" id="handwriteCheck" name="handwritting" value={isHandwrite} onChange={() => setIsHandwrite(!isHandwrite)} />
                     {/* eslint-disable-next-line */}
                     <a class="upload-file-submit" onClick={() => handleSubmit()}>Process</a>
                     <div class="upload-progress-container">
@@ -105,7 +112,7 @@ const Upload = () => {
                     <div class="upload-file-process">
                         <div class="upload-result" style={{ marginRight: 10 }}>
                             <p class="upload-file-process-title">Initial</p>
-                            <img class="upload-file-process-image" src={file} alt="preview" />
+                            <img class="upload-file-process-image" src={file} alt="preview" style={{alignSelf: "center"}}/>
                         </div>
                         <div class="upload-result"  style={{ marginLeft: 10 }}>
                             <div class="upload-result-right">
@@ -138,6 +145,7 @@ const Upload = () => {
                                     /* eslint-disable-next-line */
                                     src={doubleCheck()}
                                     alt="preview"
+                                    style={{alignSelf: "center", minHeight: "100%"}}
                                 />)
                             }
                         </div>
