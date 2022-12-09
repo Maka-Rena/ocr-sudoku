@@ -1,36 +1,39 @@
-
 # Makefile
 
 CC := gcc
-CPPFLAGS :=
 CFLAGS := -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image` -Wno-unknown-pragmas
 LDFLAGS := -lm
 LDLIBS := `pkg-config --libs sdl2 SDL2_image`
 EXEC := sudoc
 EXEC_TEST := test
-EXEC_SOLVER := solver
 
 BUILD_DIR := build
-#TEST_DATA_DIR := ./tests/out
 
-SRC := ./sudoc/main.c
+SRC :=	${wildcard ./sudoc/solver/libs/*.c} \
+		${wildcard ./sudoc/tests/libs/*.c} \
+		${wildcard ./sudoc/image_management/libs/*.c} \
+		${wildcard ./sudoc/libraries/matrix_lib/libs/*.c} \
+		${wildcard ./sudoc/libraries/data_set_lib/libs/*.c} \
+		${wildcard ./sudoc/neural_network/digits_recog_nn/libs/*.c} \
+		${wildcard ./sudoc/rotate_image/libs/*.c} \
+		./sudoc/main.c
 
-SOLVER_SRC :=	${wildcard ./sudoc/solver/libs/*.c} ./sudoc/solver/solverMain.c
-
-TEST_SRC :=	${wildcard ./sudoc/solver/libs/*.c} \
+TEST_SRC := ${wildcard ./sudoc/solver/libs/*.c} \
 			${wildcard ./sudoc/tests/libs/*.c} \
 			${wildcard ./tests/libs/*.c} \
 			${wildcard ./tests/*.c} \
-			${wildcard ./sudoc/libraries/matrix_lib/*.c}
-
+			${wildcard ./sudoc/image_management/libs/*.c} \
+			${wildcard ./sudoc/libraries/matrix_lib/libs/*.c} \
+			${wildcard ./sudoc/libraries/data_set_lib/libs/*.c} \
+			${wildcard ./sudoc/neural_network/digits_recog_nn/libs/*.c} \
+			${wildcard ./sudoc/rotate_image/libs/*.c} \
 
 OBJ := ${SRC:.c=.o}
 TEST_OBJ := ${TEST_SRC:.c=.o}
-SOLVER_OBJ := ${SOLVER_SRC:.c=.o}
 
 .PHONY: build all
 
-all: build build-solver build-test build-web clean-sudoc clean-test
+all: build clean-sudoc
 
 # BUILD
 build: $(OBJ)
@@ -40,10 +43,6 @@ build: $(OBJ)
 build-test: $(TEST_OBJ)
 	@mkdir -p $(BUILD_DIR)
 	@$(CC) -o $(BUILD_DIR)/$(EXEC_TEST) $^ $(LDFLAGS) $(LDLIBS)
-
-build-solver: $(SOLVER_OBJ)
-	@mkdir -p $(BUILD_DIR)
-	@$(CC) -o $(BUILD_DIR)/$(EXEC_SOLVER) $^ $(LDFLAGS) $(LDLIBS)
 
 build-npm:
 	@nix-shell -p nodejs-18_x
@@ -75,14 +74,10 @@ clean-sudoc:
 clean-test:
 	${RM} ${TEST_OBJ}
 
-clean-solver:
-	${RM} ${SOLVER_OBJ}
-
-clean-data:
-	${RM} -rf ${TEST_DATA_DIR}
-
 clean-web: 
 	@cd web/website/src/components/Upload && rm -rf process/
 
-clean: clean-sudoc clean-test clean-solver clean-data clean-web
-	${RM} -r $(BUILD_DIR)
+clean: clean-sudoc clean-test clean-web
+	${RM} -rf $(BUILD_DIR)
+
+#End Makefile
