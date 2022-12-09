@@ -10,18 +10,18 @@
 
 Matrix *lower(SDL_Surface* surface)
 {
-  
-  Uint32* pixels = surface->pixels;
-  if (pixels == NULL)
+
+    Uint32* pixels = surface->pixels;
+    if (pixels == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
-  //le format
-  SDL_PixelFormat* format = surface->format;
+    //le format
+    SDL_PixelFormat* format = surface->format;
     if (format == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
-Matrix* res = matrix_create(28,28);
-  for (int i = 0;i < surface->h;i++)
+    Matrix* res = matrix_create(28,28);
+    for (int i = 0;i < surface->h;i++)
     {
         for (int j =0; j < surface->w;j++)
         { 
@@ -29,9 +29,9 @@ Matrix* res = matrix_create(28,28);
             float av = ((float)(r+g+b))/3;
             SDL_GetRGB(pixels[i*surface->w + j], format, &r, &g, &b);
             //if(r == 255)
-                res->entries[i][j] = av;
+            res->entries[i][j] = av;
             //else
-                res->entries[i][j] = av;
+            res->entries[i][j] = av;
         }
     }
     return res;
@@ -52,32 +52,63 @@ SDL_Surface* Load_image(const char* path)
 int main(int argc, char** argv)
 {
     srand(time(NULL));
-    if(argc > 2 || argc < 1)
+    if(argc > 3 || argc < 1)
         errx(1, "Wrong number of arguments !");
     if(strcmp(argv[1], "train") == 0)
         // TRAINING
     {
-        int number_imgs = 60000;
-        Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/mnist_train.csv", number_imgs);
-        NeuralNetwork* net = network_create(784, 30, 10, 0.06f);
-        network_train_batch_imgs(net, imgs, number_imgs);
-        network_save(net, "testing_net");
-        network_print(net);
+        if(strcmp((argv[2]), "handwritten") == 0)
+        {
+            int number_imgs = 60000;
+            Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/mnist_train.csv", number_imgs);
+            NeuralNetwork* net = network_create(784, 30, 10, 0.06f);
+            network_train_batch_imgs(net, imgs, number_imgs);
+            network_save(net, "testing_net");
+            network_print(net);
+            network_free(net);
+        }
+        if(strcmp((argv[2]), "computer") == 0)
+        {
+            int number_imgs = 60000;
+            Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/computer_train.csv", number_imgs);
+            NeuralNetwork* net = network_create(784, 30, 10, 0.06f);
+            network_train_batch_imgs(net, imgs, number_imgs);
+            network_save(net, "computer_net");
+            network_print(net);
+            network_free(net);
+        }
 
-        network_free(net);
+
     }
     // PREDICTING
     if(strcmp((argv[1]), "predict") == 0)
     {
-        int number_imgs = 10000;
-        Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/mnist_test.csv", number_imgs);
-        NeuralNetwork* net = network_load("testing_net");
-        printf("On est ok !\n");
-        double score = network_predict_imgs(net, imgs, 10000);
-        
-        printf("Score: %1.5f\n", score);
-        
-        network_free(net);
+        if(strcmp((argv[2]), "handwritten") == 0)
+        {
+            int number_imgs = 10000;
+            Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/mnist_test.csv", number_imgs);
+            NeuralNetwork* net = network_load("testing_net");
+            // NeuralNetwork* net = network_load("handwritten_test");
+            printf("On est ok !\n");
+            double score = network_predict_imgs(net, imgs, 10000);
+
+            printf("Score for handwritten characters : %1.5f\n", score);
+
+            network_free(net);
+        }
+        else if(strcmp((argv[2]), "computer") == 0)
+        {
+            int number_imgs = 10000;
+            Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/computer_test.csv", number_imgs);
+            NeuralNetwork* net = network_load("computer_net");
+            printf("On est ok !\n");
+            double score = network_predict_imgs(net, imgs, 10000);
+
+            printf("Score for computer characters : %1.5f\n", score);
+
+            network_free(net);
+
+        }
     }
 
     if(strcmp((argv[1]), "test") == 0)
@@ -85,7 +116,7 @@ int main(int argc, char** argv)
         SDL_Surface *surface = Load_image("../../../pictures/28x28.png");
         NeuralNetwork* net = network_load("testing_net");
         Matrix *to_img = lower(surface);
-        
+
         printf("heyho\n");
         Image *my_img = malloc(sizeof(Image));
         my_img->img_data = to_img;
@@ -96,10 +127,10 @@ int main(int argc, char** argv)
         printf("actual number = %i\n", 6);
         network_free(net);
         /*matrix_print(imgs[5]->img_data); 
-        Matrix* res = network_predict_img(net,imgs[5]);
-        printf("predicted number = %i\n", matrix_argmax(res));
-        printf("actual number = %i\n", imgs[5]->label);
-        imgs_free(imgs, number_imgs);*/
+          Matrix* res = network_predict_img(net,imgs[5]);
+          printf("predicted number = %i\n", matrix_argmax(res));
+          printf("actual number = %i\n", imgs[5]->label);
+          imgs_free(imgs, number_imgs);*/
     }
     return 0;
 }
