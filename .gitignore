@@ -4,6 +4,9 @@
 # Prerequisites
 *.d
 
+.json
+
+
 # Object files
 *.o
 *.ko

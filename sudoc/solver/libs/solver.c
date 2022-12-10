@@ -1,48 +1,94 @@
 #include "../include/solver.h"
-#define N 9
 
 
-int isAvailable(int puzzle[], int row, int col, int num)
+int isAvailable(int puzzle[], int row, int col, int num, int n)
 {
-    int rowStart = (row/3) * 3;
-    int colStart = (col/3) * 3;
-    int i;
-
-    for(i=0; i<9; ++i)
+    if (n == 9)
     {
-        if (puzzle[row*N+i] == num) return 0;
-        if (puzzle[i*N+col] == num) return 0;
-        if (puzzle[(rowStart + (i%3))*N+(colStart + (i/3))] == num) return 0;
+        int rowStart = (row/3) * 3;
+        int colStart = (col/3) * 3;
+        int i;
+
+        for(i=0; i<n; ++i)
+        {
+            if (puzzle[row*n+i] == num) return 0;
+            if (puzzle[i*n+col] == num) return 0;
+            if (puzzle[(rowStart + (i%3))*n+(colStart + (i/3))] == num) return 0;
+        }
+        return 1;
     }
-    return 1;
+    else{
+        int rowStart = (row/4) * 4;
+        int colStart = (col/4) * 4;
+        int i;
+
+        for(i=0; i<n; ++i)
+        {
+            if (puzzle[row*n+i] == num) return 0;
+            if (puzzle[i*n+col] == num) return 0;
+            if (puzzle[(rowStart + (i%4))*n+(colStart + (i/4))] == num) return 0;
+        }
+        return 1;
+    }
 }
 
-int solveSudoku(int *sudok, int row, int col)
+int solveSudoku(int *sudok, int row, int col, int n)
 {
-    int i;
-    if(row<9 && col<9)
+    //Solve hexa sudoku
+    if (n == 16)
     {
-        if(sudok[row*N+col])
+        if(row<n && col<n)
         {
-            if((col+1)<9) return solveSudoku(sudok, row, col+1);
-            else if((row+1)<9) return solveSudoku(sudok, row+1, 0);
-            else return 1;
-        }
-        else
-        {
-            for (i=0; i<9; ++i)
+            if(sudok[row*n+col])
             {
-                if (isAvailable(sudok, row, col, i+1))
+                if((col+1)<n) return solveSudoku(sudok, row, col+1, n);
+                else if((row+1)<n) return solveSudoku(sudok, row+1, 0, n);
+                else return 1;
+            }
+            else
+            {
+                for (int i=0; i<n; ++i)
                 {
-                    sudok[row*N+col] = i+1;
-                    if (solveSudoku(sudok, row, col))
-                        return 1;
-                    else
-                        sudok[row*N+col] = 0;
+                    if (isAvailable(sudok, row, col, i+1, n))
+                    {
+                        sudok[row*n+col] = i+1;
+                        if (solveSudoku(sudok, row, col, n))
+                            return 1;
+                        else
+                            sudok[row*n+col] = 0;
+                    }
                 }
             }
+            return 0;
         }
-        return 0;
+        else return 1;
     }
-    else return 1;
+    //Solve normal sudoku
+    else{
+        if(row<n && col<n)
+        {
+            if(sudok[row*n+col])
+            {
+                if((col+1)<n) return solveSudoku(sudok, row, col+1, n);
+                else if((row+1)<n) return solveSudoku(sudok, row+1, 0, n);
+                else return 1;
+            }
+            else
+            {
+                for (int i=0; i<n; ++i)
+                {
+                    if (isAvailable(sudok, row, col, i+1, n))
+                    {
+                        sudok[row*n+col] = i+1;
+                        if (solveSudoku(sudok, row, col, n))
+                            return 1;
+                        else
+                            sudok[row*n+col] = 0;
+                    }
+                }
+            }
+            return 0;
+        }
+        else return 1;
+    }
 }

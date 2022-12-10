@@ -11,12 +11,14 @@ const Upload = () => {
     const [step, setStep] = useState(0);
     const [processState, setProcessState] = useState(["⏳ -- Starting process..."]);
     const [isHandwrite, setIsHandwrite] = useState(false);
+    const [result, setResult] = useState([]);
+
+    const MAX_STEP = 4;
 
     const handleChange = (e) => {
         setFilename(e.target.files[0].name);
         setFile(URL.createObjectURL(e.target.files[0]))
     }
-    const [result, setResult] = useState([]);
 
     const handleSubmit = async () => {
         console.log("FILE : ", filename);
@@ -53,7 +55,7 @@ const Upload = () => {
         if (step === 3) {
             setProcessState(["⏳ -- Starting process...", "✅ -- Image loaded", "✅ -- Image processed", "⏳ -- Solving sudoku..."]);
         }
-        if (step === 4) {
+        if (step === MAX_STEP) {
             //Get JSON file
             axios.get("http://localhost:3001/result")
                 .then(res => {
@@ -62,7 +64,7 @@ const Upload = () => {
                     for (let i = 0; i < 9; i++) {
                         let temp = [];
                         for (let j = 0; j < 9; j++) {
-                            temp.push(arr.array[i * 9 + j]);
+                            temp.push(arr[i * 9 + j]);
                         }
                         result.push(temp);
                     }
@@ -71,6 +73,7 @@ const Upload = () => {
                 .catch(err => {
                     console.log(err);
                 });
+            console.log("Result : ", result)
             setProcessState(["⏳ -- Starting process...", "✅ -- Image loaded", "✅ -- Image processed", "✅ -- Sudoku solved", "✅ -- Done"]);
         }
         console.log("step : ", step);        
@@ -124,22 +127,59 @@ const Upload = () => {
                                 </div>
                             </div>
                             <div class="result-list-container">
-                                {step === 4 && result !== [] && (result.map((item, index) => {
+                                {step === MAX_STEP && result !== [] && (result.map((item, index) => {
                                     return (
                                         <div class="result-list" key={index}>
-                                            {item.map((item2, index2) => {
-                                                return (
-                                                    <div class="result-list-item" key={index2}>
-                                                        <p class="result-list-item-title">{item2}</p>
-                                                    </div>
-                                                )
+                                            {index === 2 || index === 5 ?
+                                                (item.map((item2, index2) => {
+                                                    if (index2 === 2 || index2 === 5)
+                                                    {
+                                                        return (
+                                                            <div class="result-list-item border-style-right border-style-bottom" key={index2}>
+                                                                {item2["solved"] === 'true' ?
+                                                                    <p class="result-list-item-title color-red">{item2["value"]}</p>
+                                                                    : <p class="result-list-item-title">{item2["value"]}</p>
+                                                                }
+                                                            </div>
+                                                        )
+                                                    }
+                                                    return (
+                                                        <div class="result-list-item border-style-bottom" key={index2} >
+                                                            {item2["solved"] === "true" ?
+                                                                <p class="result-list-item-title color-red">{item2["value"]}</p>
+                                                                : <p class="result-list-item-title">{item2["value"]}</p>
+                                                            }
+                                                        </div>
+                                                    )
+                                                }))
+                                            :
+                                                (item.map((item2, index2) => {
+                                                    if (index2 === 2 || index2 === 5)
+                                                    {
+                                                        return (
+                                                            <div class="result-list-item border-style-right" key={index2}>
+                                                                {item2["solved"] === "true" ?
+                                                                    <p class="result-list-item-title color-red">{item2["value"]}</p>
+                                                                    : <p class="result-list-item-title">{item2["value"]}</p>
+                                                                }
+                                                            </div>
+                                                        )
+                                                    }
+                                                    return (
+                                                        <div class="result-list-item" key={index2} >
+                                                            {item2["solved"] === "true" ?
+                                                                <p class="result-list-item-title color-red">{item2["value"]}</p>
+                                                                : <p class="result-list-item-title">{item2["value"]}</p>
+                                                            }
+                                                        </div>
+                                                    )
+                                                }))
                                             }
-                                            )}
                                         </div>
                                     )
                                 }))}
                             </div>
-                            {step !== 4 &&
+                            {step !== MAX_STEP &&
                                 (<img
                                     class="upload-file-process-image"
                                     /* eslint-disable-next-line */

@@ -45,7 +45,7 @@ app.get("/step", (req, res) => {
     step = parseInt(currentStep) + 1;
   }
   else{
-    if (fs.existsSync("../website/src/components/Upload/process/4.json"))
+    if (fs.existsSync("../website/src/components/Upload/process/solvedSudoku.json"))
     {
       step = 4;
     }
@@ -57,9 +57,10 @@ app.get("/step", (req, res) => {
 
 app.get("/result", (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
-  let rawdata = fs.readFileSync('../website/src/components/Upload/process/result.json');
+  let rawdata = fs.readFileSync('../website/src/components/Upload/process/solvedSudoku.json');
   let result = JSON.parse(rawdata);
-  res.send(result);
+  console.log(result["sudoku"]);
+  res.send(result["sudoku"]);
   res.end();
 });
 

@@ -24,7 +24,41 @@ void parser (char* file_path, int* sudok)
             case ' ':
                 break;
             default:
-                sudok[n++] = c - '0';
+                if (c < '0' || c > '9')
+                {
+                    switch (c)
+                    {
+                    case 'A':
+                        sudok[n++] = 10;
+                        break;
+
+                    case 'B':
+                        sudok[n++] = 11;
+                        break;
+                    
+                    case 'C':
+                        sudok[n++] = 12;
+                        break;
+
+                    case 'D':
+                        sudok[n++] = 13;
+                        break;
+
+                    case 'E':
+                        sudok[n++] = 14;
+                        break;
+
+                    case 'F':
+                        sudok[n++] = 15;
+                        break;
+                    
+                    default:
+                        errx(EXIT_FAILURE, "Invalid character in file!");
+                        break;
+                    }
+                }
+                else
+                    sudok[n++] = c - '0';
         }
     }
 }
