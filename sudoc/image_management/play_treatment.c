@@ -85,11 +85,38 @@ int main(int argc, char** argv)
     surface = CV_IMG_TO_SURFACE(image);
     IMG_SavePNG(surface, "lines.png");
 
+    //Find intersection points
+    int nbintersections = 0;
+    int *intersections = Find_intersections(merged, n,&nbintersections);
+    int i = 0;
+    while (i  < nbintersections*2)
+    {
+        Hough_draw_circle(image,image,intersections[2*i],intersections[2*i+1],5,5,CV_RGB(0, 0, 255));
+        i++;
+    }
+    // - Save the image.
+    surface = CV_IMG_TO_SURFACE(image);
+    IMG_SavePNG(surface, "intersections.png");
+
+
+    //Find cells
+    /*int *cells = Get_grid(intersections, nbintersections);
+    i = 0;
+    surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
+    printf("%d %d %d %d\n",cells[0],cells[1],cells[2],cells[3]);
+        SDL_Surface* croped = SDL_CreateRGBSurface(0, (cells[4*i+2]-cells[4*i])+1,(cells[4*i+3]-cells[4*i+1])+1,32,0,0,0,0);
+        SDL_FillRect(croped, NULL, SDL_MapRGB(croped->format, 255, 255, 255));
+        //Convert the pixel format to RGBA32
+	    //croped_image(surface,croped, cells[4*i], cells[4*i+1], cells[4*i+2], cells[4*i+3]);
+        char file[7];
+        sprintf(file, "%d.png", i);
+	    IMG_SavePNG(croped, file);
+        SDL_FreeSurface(croped);*/
     // - Free the surface.
     SDL_FreeSurface(surface);
     CV_FREE(&image);
 
-    //free(lines);
-    //free(merged);
+    free(lines);
+    free(merged);
     return EXIT_SUCCESS;
 }
