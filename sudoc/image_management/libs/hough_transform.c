@@ -447,10 +447,9 @@ float Find_orientation(int *lines, int nlines)
 /// @param nlines Number of lines
 /// @param nintersection Number of intersections
 /// @return Array of intersections where 2n and 2n+1 are x and y coordinates
-int *Compute_intersections(int *lines, int nlines, int *nintersection)
+int *Compute_intersections(int *lines, int nlines, int *nintersection, int width, int height)
 {
-    int *intersection = (int *)malloc(sizeof(int) * nlines * nlines * 2);
-    memset(intersection, 0, sizeof(int) * nlines * nlines * 2);
+    int *intersection = calloc(nlines * nlines * 2,sizeof(int));
 
     int j = 0;
     for (int i = 0; i < nlines; i++)
@@ -474,67 +473,17 @@ int *Compute_intersections(int *lines, int nlines, int *nintersection)
 
             float x = (d * rho1 - b * rho2) / det;
             float y = (-c * rho1 + a * rho2) / det;
-
+            if (x <= 0 || y <= 0 || x >= width || y >= height)
+                continue;
             intersection[j * 2] = (int)x;
             intersection[j * 2 + 1] = (int)y;
             j++;
         }
     }
-
+    intersection = realloc(intersection, sizeof(int) * j * 2);
     *nintersection = j;
 
     return intersection;
-}
-
-/// @brief Sort intersections by x coordinate
-/// @param intersections Intersections to sort
-/// @param nintersections Number of intersections
-/// @return Sorted intersections by x coordinate
-int *Sort_intersections(int *intersections, int nintersections)
-{
-    int *sorted = (int *)malloc(sizeof(int) * nintersections * 2);
-    memset(sorted, 0, sizeof(int) * nintersections * 2);
-
-    for (int i = 0; i < nintersections; i++)
-    {
-        int x = intersections[i * 2];
-        int y = intersections[i * 2 + 1];
-
-        int j = 0;
-        for (j = 0; j < i; j++)
-        {
-            int y2 = sorted[j * 2 + 1];
-
-            if (y < y2)
-                break;
-        }
-
-        for (int k = i; k > j; k--)
-        {
-            sorted[k * 2] = sorted[(k - 1) * 2];
-            sorted[k * 2 + 1] = sorted[(k - 1) * 2 + 1];
-        }
-
-        sorted[j * 2] = x;
-        sorted[j * 2 + 1] = y;
-    }
-
-    return sorted;
-}
-
-/// @brief Find all intersections between two lines
-/// @param lines Lines to find intersections
-/// @param nlines Number of lines
-/// @param nintersection Number of intersections
-/// @return Array of intersections where 2n and 2n+1 are x and y coordinates
-int *Find_intersections(int *lines, int nlines, int *nintersection)
-{
-    int *intersections = Compute_intersections(lines, nlines, nintersection);
-    int *sorted = Sort_intersections(intersections, *nintersection);
-
-    FREE(intersections);
-
-    return sorted;
 }
 
 /// @brief Find all boxes in a grid
@@ -569,3 +518,5 @@ int *Get_grid(int *intersections, int nintersections)
     res[3] = maxy;
     return res;
 }
+
+

@@ -146,7 +146,6 @@ void blackandwhite(SDL_Surface* surface)
 
         if (((r+b+g)/3) >= th)
         {
-
             pixels[count] = SDL_MapRGB(format, 255,255,255);
         }
         else
