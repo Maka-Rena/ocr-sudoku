@@ -201,6 +201,6 @@ void princip(SDL_Surface* surface)
     //bring back the white pixels instead of the blue ones
     bringing_back(surface);
     deleting(surface);
-    IMG_SavePNG(surface, "result.png");
+    //IMG_SavePNG(surface, "result.png");
     SDL_UnlockSurface(surface);
 }
