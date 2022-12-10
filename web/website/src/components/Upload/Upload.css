@@ -81,7 +81,8 @@
     align-items: center;
 }
 .upload-file-process-image{
-    width: 90%;
+    max-width: 90%;
+    max-height: 600px;
     border-radius: 10px;
 }
 .upload-result{
@@ -95,14 +96,21 @@
     font-weight: 700;
     margin-bottom: 10px;
 }
+.color-red{
+    color: #ff0000;
+}
 .result-list-container{
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    max-height: 600px;
     flex-wrap: wrap;
     background-color: #F8F9FA;
     border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 .result-list{
     display: flex;
@@ -110,20 +118,27 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 .result-list-item{
     display: flex;
     flex-wrap: nowrap;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 50px;
-    margin: 10px;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    border: 0.25px solid #007BFF;
 }
 .result-list-item-title{
     font-size: 15px;
     font-weight: 600;
+}
+.border-style-right{
+    border-right: 3px solid #007BFF;
+}
+.border-style-bottom{
+    border-bottom: 3px solid #007BFF;
 }
 .upload-term-container{
     margin-top: 20px;
@@ -154,7 +169,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
 }
 .upload-next-step-container{
     display: flex;

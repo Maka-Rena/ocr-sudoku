@@ -33,7 +33,7 @@ TEST_OBJ := ${TEST_SRC:.c=.o}
 
 .PHONY: build all
 
-all: build clean-sudoc
+all: run
 
 # BUILD
 build: $(OBJ)
@@ -53,7 +53,8 @@ build-api:
 	@cd web/api/ && npm install && clear && node index.js
 
 # RUN
-run: build clean-sudoc
+run: build
+	@clear
 	@./$(BUILD_DIR)/$(EXEC)
 
 test: build-test

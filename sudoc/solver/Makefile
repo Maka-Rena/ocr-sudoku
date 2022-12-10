@@ -22,4 +22,5 @@ clean:
 	${RM} ${OBJ}
 	${RM} ${EXE}
 	${RM} solver
+	${RM} ../../web/website/src/components/Upload/process/solvedSudoku.json
 #End Makefile
