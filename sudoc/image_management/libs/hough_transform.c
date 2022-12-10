@@ -365,6 +365,53 @@ Image *Hough_draw_lines(const Image *src, Image *dst, int *lines, int nlines, in
     return dst;
 }
 
+/// @brief Draw a circle on an image
+/// @param src The source image
+/// @param dst The destination image
+/// @param x The x coordinate of the center
+/// @param y The y coordinate of the center
+/// @param r The radius of the circle
+/// @param width The width of the circle
+/// @param color The color of the circle
+/// @return
+Image *Hough_draw_circle(const Image *src, Image *dst, int x, int y, int r, int width, Uint32 color)
+{
+    int f = 1 - r;
+    int ddF_x = 1;
+    int ddF_y = -2 * r;
+    int _x = 0;
+    int _y = r;
+
+    Hough_draw_point(src, dst, x, y + r, width, color);
+    Hough_draw_point(src, dst, x, y - r, width, color);
+    Hough_draw_point(src, dst, x + r, y, width, color);
+    Hough_draw_point(src, dst, x - r, y, width, color);
+
+    while (_x < _y)
+    {
+        if (f >= 0)
+        {
+            _y--;
+            ddF_y += 2;
+            f += ddF_y;
+        }
+        _x++;
+        ddF_x += 2;
+        f += ddF_x;
+
+        Hough_draw_point(src, dst, x - _x, y + _y, width, color);
+        Hough_draw_point(src, dst, x + _x, y + _y, width, color);
+        Hough_draw_point(src, dst, x + _x, y - _y, width, color);
+        Hough_draw_point(src, dst, x - _x, y - _y, width, color);
+        Hough_draw_point(src, dst, x + _y, y + _x, width, color);
+        Hough_draw_point(src, dst, x - _y, y + _x, width, color);
+        Hough_draw_point(src, dst, x + _y, y - _x, width, color);
+        Hough_draw_point(src, dst, x - _y, y - _x, width, color);
+    }
+
+    return dst;
+}
+
 /// @brief Find the orientation of an image using lines.
 /// @param lines The lines array
 /// @param nlines The number of lines
@@ -395,3 +442,131 @@ float Find_orientation(int *lines, int nlines)
     return max_theta;
 }
 
+/// @brief Find all intersections between two lines
+/// @param lines Lines to find intersections
+/// @param nlines Number of lines
+/// @param nintersection Number of intersections
+/// @return Array of intersections where 2n and 2n+1 are x and y coordinates
+int *Compute_intersections(int *lines, int nlines, int *nintersection)
+{
+    int *intersection = (int *)malloc(sizeof(int) * nlines * nlines * 2);
+    memset(intersection, 0, sizeof(int) * nlines * nlines * 2);
+
+    int j = 0;
+    for (int i = 0; i < nlines; i++)
+    {
+        int rho1 = lines[i * 2];
+        int theta1 = lines[i * 2 + 1];
+
+        for (int k = i + 1; k < nlines; k++)
+        {
+            int rho2 = lines[k * 2];
+            int theta2 = lines[k * 2 + 1];
+
+            float a = cos(theta1 * PI / 180.0);
+            float b = sin(theta1 * PI / 180.0);
+            float c = cos(theta2 * PI / 180.0);
+            float d = sin(theta2 * PI / 180.0);
+
+            float det = a * d - b * c;
+            if (det == 0)
+                continue;
+
+            float x = (d * rho1 - b * rho2) / det;
+            float y = (-c * rho1 + a * rho2) / det;
+
+            intersection[j * 2] = (int)x;
+            intersection[j * 2 + 1] = (int)y;
+            j++;
+        }
+    }
+
+    *nintersection = j;
+
+    return intersection;
+}
+
+/// @brief Sort intersections by x coordinate
+/// @param intersections Intersections to sort
+/// @param nintersections Number of intersections
+/// @return Sorted intersections by x coordinate
+int *Sort_intersections(int *intersections, int nintersections)
+{
+    int *sorted = (int *)malloc(sizeof(int) * nintersections * 2);
+    memset(sorted, 0, sizeof(int) * nintersections * 2);
+
+    for (int i = 0; i < nintersections; i++)
+    {
+        int x = intersections[i * 2];
+        int y = intersections[i * 2 + 1];
+
+        int j = 0;
+        for (j = 0; j < i; j++)
+        {
+            int y2 = sorted[j * 2 + 1];
+
+            if (y < y2)
+                break;
+        }
+
+        for (int k = i; k > j; k--)
+        {
+            sorted[k * 2] = sorted[(k - 1) * 2];
+            sorted[k * 2 + 1] = sorted[(k - 1) * 2 + 1];
+        }
+
+        sorted[j * 2] = x;
+        sorted[j * 2 + 1] = y;
+    }
+
+    return sorted;
+}
+
+/// @brief Find all intersections between two lines
+/// @param lines Lines to find intersections
+/// @param nlines Number of lines
+/// @param nintersection Number of intersections
+/// @return Array of intersections where 2n and 2n+1 are x and y coordinates
+int *Find_intersections(int *lines, int nlines, int *nintersection)
+{
+    int *intersections = Compute_intersections(lines, nlines, nintersection);
+    int *sorted = Sort_intersections(intersections, *nintersection);
+
+    FREE(intersections);
+
+    return sorted;
+}
+
+/// @brief Find all boxes in a grid
+/// @param intersections Intersections to find boxes
+/// @param nintersections Number of intersections
+/// @param nboxes Number of boxes
+/// @return Array of boxes where 4n, 4n+1, 4n+2 and 4n+3 are x and y coordinates of the 4 corners
+int *Get_grid(int *intersections, int nintersections, int *nboxes)
+{
+    int *boxes = (int *)malloc(sizeof(int) * nintersections * 4);
+    memset(boxes, 0, sizeof(int) * nintersections * 4);
+
+    int snbi = sqrt(nintersections);
+
+    int j = 0;
+    for (int i = 0; i < nintersections - snbi; i++)
+    {
+        if ((i + 1) % snbi == 0)
+            continue;
+
+        int x1 = intersections[i * 2];
+        int y1 = intersections[i * 2 + 1];
+        int x4 = intersections[i * 2 + snbi * 2 + 2];
+        int y4 = intersections[i * 2 + snbi * 2 + 3];
+
+        boxes[j * 4] = x1;
+        boxes[j * 4 + 1] = y1;
+        boxes[j * 4 + 2] = x4;
+        boxes[j * 4 + 3] = y4;
+        j++;
+    }
+
+    *nboxes = j;
+    return boxes;
+}

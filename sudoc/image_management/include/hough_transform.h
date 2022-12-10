@@ -46,5 +46,11 @@ int *Hough_merge_lines(int *lines, int nlines, int threshold, int *n);
 Image *Hough_draw_point(const Image *src, Image *dst, int x, int y, int width, Uint32 color);
 Image *Hough_draw_line(const Image *src, Image *dst, int x1, int y1, int x2, int y2, int width, Uint32 color);
 Image *Hough_draw_lines(const Image *src, Image *dst, int *lines, int nlines, int weight, Uint32 color);
+Image *Hough_draw_circle(const Image *src, Image *dst, int x, int y, int r, int width, Uint32 color);
 
 float Find_orientation(int *lines, int nlines);
+
+int *Compute_intersections(int *lines, int nlines, int *nintersection);
+int *Sort_intersections(int *intersections, int nintersections);
+int *Find_intersections(int *lines, int nlines, int *nintersection);
+int *Get_grid(int *intersections, int nintersections, int *nboxes);

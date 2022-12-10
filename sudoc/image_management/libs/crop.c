@@ -1,31 +1,24 @@
 #include "../include/crop.h"
 
-void croped_image(SDL_Surface *image, SDL_Surface *croped, int begin, int end)
+void croped_image(SDL_Surface *image, SDL_Surface *croped, int x1,int y1,int x2, int y2)
 {   
     Uint32* pixels = image->pixels;
     Uint32* new_pixels = croped->pixels;
-    if (pixels == NULL || new_pixels == NULL)
-        errx(EXIT_FAILURE, "%s", SDL_GetError());
-
-    int len = image->w*image->h;
-
-	if (begin < 0 || end > len)
-		errx(EXIT_FAILURE, "%s", "index out of borns");
-
-    //int new_len = croped->w*croped->h;
+    int len = croped->w*croped->h;
 
 	SDL_LockSurface(croped);
 	int j = 0;
-	int hmax = croped->h;
-	while (hmax != 0)
+	int x = x1;
+	int y = y1;
+	while (y != y2 && j < len)
 	{
-    	for (int i = 0; i < croped->w; i++)
-    	{
-			new_pixels[j] = pixels[begin + i]; 
-    		j++;
-    	}
-		hmax--;
-		begin = begin + image->w;
+		if (x == x2)
+		{
+			x = x1;
+			y++;
+		}
+		new_pixels[j] = pixels[image->w*y + x]; 
+    	j++;
 	}
 	SDL_UnlockSurface(croped); 
 }
