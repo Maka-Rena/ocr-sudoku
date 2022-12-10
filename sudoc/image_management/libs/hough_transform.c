@@ -542,31 +542,30 @@ int *Find_intersections(int *lines, int nlines, int *nintersection)
 /// @param nintersections Number of intersections
 /// @param nboxes Number of boxes
 /// @return Array of boxes where 4n, 4n+1, 4n+2 and 4n+3 are x and y coordinates of the 4 corners
-int *Get_grid(int *intersections, int nintersections, int *nboxes)
+int *Get_grid(int *intersections, int nintersections)
 {
-    int *boxes = (int *)malloc(sizeof(int) * nintersections * 4);
-    memset(boxes, 0, sizeof(int) * nintersections * 4);
-
-    int snbi = sqrt(nintersections);
-
-    int j = 0;
-    for (int i = 0; i < nintersections - snbi; i++)
+    int *res = calloc(4,sizeof(int));
+    int minx = intersections[0];
+    int maxx = 0;
+    int miny = intersections[1];
+    int maxy = 0;
+    for (int i = 0; i < nintersections; i++)
     {
-        if ((i + 1) % snbi == 0)
-            continue;
+        int x = intersections[i * 2];
+        int y = intersections[i * 2 + 1];
 
-        int x1 = intersections[i * 2];
-        int y1 = intersections[i * 2 + 1];
-        int x4 = intersections[i * 2 + snbi * 2 + 2];
-        int y4 = intersections[i * 2 + snbi * 2 + 3];
-
-        boxes[j * 4] = x1;
-        boxes[j * 4 + 1] = y1;
-        boxes[j * 4 + 2] = x4;
-        boxes[j * 4 + 3] = y4;
-        j++;
+        if (x < minx)
+            minx = x;
+        if (x > maxx)
+            maxx = x;
+        if (y < miny)
+            miny = y;
+        if (y > maxy)
+            maxy = y;
     }
-
-    *nboxes = j;
-    return boxes;
+    res[0] = minx;
+    res[1] = miny;
+    res[2] = maxx;
+    res[3] = maxy;
+    return res;
 }
