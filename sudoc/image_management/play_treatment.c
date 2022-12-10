@@ -60,20 +60,17 @@ int main(int argc, char** argv)
     IMG_SavePNG(surface, "contrast.png");
     blackandwhite(surface);
     IMG_SavePNG(surface, "black_n_white.png");
-    
     // - Convert the surface into sobel surface 
 	Kernel_Convolution_Sobel(surface);
     IMG_SavePNG(surface, "sobel.png");
 
-    princip(surface);
-    IMG_SavePNG(surface, "flood_fill.png");
+    /*princip(surface);
+    IMG_SavePNG(surface, "flood_fill.png");*/
     
     Image *image = CV_SURFACE_TO_IMG(surface);
     if (image == NULL)
         errx(1, "Failed converting the surface to image");
 
-
-    
     //Hough Transform call
     int n = 0;
     int *lines = Hough_lines(image, 300, &n);
@@ -93,9 +90,9 @@ int main(int argc, char** argv)
 
     //Find intersection points
     int nbintersections = 0;
-    int *intersections = Find_intersections(merged, n,&nbintersections);
+    int *intersections = Compute_intersections(merged, n,&nbintersections,surface->w,surface->h);
     int i = 0;
-    while (i  < nbintersections*2)
+    while (i  < nbintersections)
     {
         Hough_draw_circle(image,image,intersections[2*i],intersections[2*i+1],5,5,CV_RGB(0, 0, 255));
         i++;
@@ -103,16 +100,46 @@ int main(int argc, char** argv)
     // - Save the image.
     surface = CV_IMG_TO_SURFACE(image);
     IMG_SavePNG(surface, "intersections.png");
-
+    
+    //First free
+    CV_FREE(&image);
+    free(lines);
+    free(merged);
+    SDL_FreeSurface(surface);
+    
+    SDL_Surface* surface2 = Load_image("black_n_white.png");
+    if (surface == NULL)
+        errx(EXIT_FAILURE, "%s", SDL_GetError());
     //Find grid
     int *grid = Get_grid(intersections, nbintersections);
     printf("Grid: %d %d %d %d",grid[0], grid[1], grid[2], grid[3]);
-    // - Free the surface.
-    SDL_FreeSurface(surface);
-    CV_FREE(&image);
 
-    free(lines);
-    free(merged);
+    // - Crop the image.
+    int width = grid[2] - grid[0];
+    int height = grid[3] - grid[1];
+
+    int new_width = width/9;
+    int new_height = height/9;
+    printf("New width: %d New height: %d",new_width,new_height);
+    char file[7];
+    SDL_Surface* croped = SDL_CreateRGBSurface(0,new_width,new_height,32,0,0,0,0);
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            SDL_FillRect(croped, NULL, SDL_MapRGB(croped->format, 0, 0, 0));
+            croped_image(surface2,croped, grid[0]+j*new_width+i, grid[1]+i*new_height+i,grid[0]+(j+1)*new_width+i,grid[1]+(i+1)*new_height+i );
+            //croped = resize(croped, 28, 28);
+            Clean_surface(croped);
+            sprintf(file, "%d.png",9*i+j);
+            IMG_SavePNG(croped, file);
+        }
+    }
+
+    // - Free the surface.
+    SDL_FreeSurface(croped);
+
+    
     free(intersections);
     free(grid);
     return EXIT_SUCCESS;
