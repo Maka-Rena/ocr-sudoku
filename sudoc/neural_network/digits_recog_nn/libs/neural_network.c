@@ -7,6 +7,10 @@
 #include "../include/neural_network.h"
 
 #define MAXCHAR 1000
+#define RED "\033[31;1m"
+#define GREEN "\033[32;1m"
+#define YELLOW "\033[33;1m"
+#define RESET "\033[37;1m"
 
 NeuralNetwork* network_create(int input, int hidden, int output, double lr)
 {
@@ -41,6 +45,17 @@ void network_free(NeuralNetwork *net) {
     matrix_free(net->output_weights);
     free(net);
     net = NULL;
+}
+// shuffle images during training
+void shuffle(Image** imgs, int n) 
+{
+    for (int i = 0; i < n; i++) 
+    {
+        int j = rand() % n;
+        Image* temp = imgs[i];
+        imgs[i] = imgs[j];
+        imgs[j] = temp;
+    }
 }
 
 void network_train(NeuralNetwork* net, Matrix* input, Matrix* output) 
@@ -101,26 +116,31 @@ void network_train(NeuralNetwork* net, Matrix* input, Matrix* output)
 
 void network_train_batch_imgs(NeuralNetwork* net, Image** imgs, int batch_size) 
 {
-    for(int j = 0 ; j < 10; j++)
-    {for (int i = 0; i < batch_size; i++) {
-        if (i % 100 == 0) printf("Img No. %d\n", i);
-        Image* cur_img = imgs[i];
-        Matrix* img_data = matrix_flatten(cur_img->img_data, 0); // 0 = flatten to column vector
-        Matrix* output = matrix_create(10, 1);
-        output->entries[cur_img->label][0] = 1; // Setting the result
-        network_train(net, img_data, output);
-        matrix_free(output);
-        matrix_free(img_data);
-    }}
+    for(int j = 0 ; j < 10; j++) // 10 epochs
+    {
+        shuffle(imgs, batch_size); // Shuffle the images
+        for (int i = 0; i < batch_size; i++) 
+        {
+            if (i % 100 == 0) 
+            {
+                printf(YELLOW "\rTraining Loading -> Img No. %d" RESET, i); // Print progress
+                fflush(stdout);
+            }
+            Image* cur_img = imgs[i];
+            Matrix* img_data = matrix_flatten(cur_img->img_data, 0); // 0 = flatten to column vector
+            Matrix* output = matrix_create(10, 1);
+            output->entries[cur_img->label][0] = 1; // Setting the result
+            network_train(net, img_data, output);
+            matrix_free(output);
+            matrix_free(img_data);
+        }
+    }
 }
 
 Matrix* network_predict_img(NeuralNetwork* net, Image* img) 
 {
-    printf("Pour l'instant c'est bon\n");
-    Matrix* img_data = matrix_flatten(img->img_data, 0);
-    printf("Toujours bon !\n");
+    Matrix* img_data = matrix_flatten(img->img_data, 0); // 0 = flatten to column vector
     Matrix* res = network_predict(net, img_data);
-    printf("Toujours  toujours bon !\n");
     matrix_free(img_data);
     return res;
 }
@@ -131,8 +151,14 @@ double network_predict_imgs(NeuralNetwork* net, Image** imgs, int n)
     for (int i = 0; i < n; i++) 
     {
         Matrix* prediction = network_predict_img(net, imgs[i]);
-        if (matrix_argmax(prediction) == imgs[i]->label) {
+        if (matrix_argmax(prediction) == imgs[i]->label) 
+        {
+            printf(GREEN "Actual Output : %i -----------> Prediction : %i\n" RESET, imgs[i]->label, matrix_argmax(prediction));
             n_correct++;
+        }
+        else
+        {
+            printf(RED "Actual Output : %i -----------> Prediction : %i\n" RESET, imgs[i]->label, matrix_argmax(prediction));
         }
         matrix_free(prediction);
     }
@@ -147,11 +173,8 @@ Matrix* network_predict(NeuralNetwork* net, Matrix* input_data)
     //matrix_print(input_data);
     //printf("input_data : row = %i  col = %i\n",input_data->rows,input_data->cols);
     //printf("hidden_weights : row = %i  col = %i\n", net->hidden_weights->rows, net->hidden_weights->cols);
-    printf("tu casse les c\n");
     Matrix* hidden_inputs = dot(net->hidden_weights, input_data);// first arg should not be transposed but was
-    printf("tu casse tjrs les c\n");
     Matrix* hidden_outputs = apply(sigmoid, hidden_inputs);
-    printf("ntm\n");
     Matrix* final_inputs = dot(net->output_weights, hidden_outputs); // first arg should not be transposed but was
     //Matrix* final_outputs = apply(sigmoid, final_inputs);
     Matrix* result = apply(sigmoid,final_inputs);
