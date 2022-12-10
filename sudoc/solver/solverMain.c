@@ -16,9 +16,11 @@ int main(int argc, char** argv)
     parser(argv[1], sudok);
     display_sudoku(sudok, atoi(argv[2]));
     printf("\n--- SOLVING SUDOKU ---\n\n");
+
     //Make a copy of the sudoku to solve it
     int *sudokInitial = malloc(max * sizeof(int));
     memcpy(sudokInitial, sudok, max * sizeof(int));
+    
     if (solveSudoku(sudok, 0, 0, atoi(argv[2])) == 0)
         errx(EXIT_FAILURE, "No solution exists for the sudoku.");
     display_sudoku(sudok, atoi(argv[2]));
