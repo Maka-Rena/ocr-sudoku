@@ -53,4 +53,4 @@ float Find_orientation(int *lines, int nlines);
 int *Compute_intersections(int *lines, int nlines, int *nintersection);
 int *Sort_intersections(int *intersections, int nintersections);
 int *Find_intersections(int *lines, int nlines, int *nintersection);
-int *Get_grid(int *intersections, int nintersections, int *nboxes);
+int *Get_grid(int *intersections, int nintersections);
