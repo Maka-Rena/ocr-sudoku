@@ -65,17 +65,23 @@ int main(int argc, char** argv)
             network_train_batch_imgs(net, imgs, number_imgs);
             network_save(net, "testing_net");
             network_print(net);
+            
+            imgs_free(imgs,number_imgs);
             network_free(net);
+
         }
         if(strcmp((argv[2]), "computer") == 0)
         {
-            int number_imgs = 60000;
-            Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/computer_train.csv", number_imgs);
-            NeuralNetwork* net = network_create(784, 30, 10, 0.06f);
+            int number_imgs = 39900;
+            Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/computer_train_40000_shuffle.csv", number_imgs);
+            NeuralNetwork* net = network_create(784, 35, 10, 0.75f);
             network_train_batch_imgs(net, imgs, number_imgs);
             network_save(net, "computer_net");
             network_print(net);
+            
+            imgs_free(imgs,number_imgs);
             network_free(net);
+
         }
 
 
@@ -90,23 +96,26 @@ int main(int argc, char** argv)
             NeuralNetwork* net = network_load("testing_net");
             // NeuralNetwork* net = network_load("handwritten_test");
             printf("On est ok !\n");
-            double score = network_predict_imgs(net, imgs, 10000);
-
+            double score = network_predict_imgs(net, imgs, number_imgs);
+            
+            imgs_free(imgs,number_imgs);
             printf("Score for handwritten characters : %1.5f\n", score);
-
             network_free(net);
+
         }
         else if(strcmp((argv[2]), "computer") == 0)
         {
-            int number_imgs = 10000;
-            Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/computer_test.csv", number_imgs);
+            int number_imgs = 14100;
+            Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/computer_test_14000_shuffle.csv", number_imgs);
             NeuralNetwork* net = network_load("computer_net");
             printf("On est ok !\n");
-            double score = network_predict_imgs(net, imgs, 10000);
+            double score = network_predict_imgs(net, imgs, number_imgs);
 
             printf("Score for computer characters : %1.5f\n", score);
-
+            
+            imgs_free(imgs,number_imgs);
             network_free(net);
+
 
         }
     }
@@ -114,7 +123,7 @@ int main(int argc, char** argv)
     if(strcmp((argv[1]), "test") == 0)
     {
         SDL_Surface *surface = Load_image("../../../pictures/28x28.png");
-        NeuralNetwork* net = network_load("testing_net");
+        NeuralNetwork* net = network_load("computer_net");
         Matrix *to_img = lower(surface);
 
         printf("heyho\n");
