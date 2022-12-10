@@ -74,7 +74,7 @@ int main(int argc, char** argv)
         {
             int number_imgs = 39900;
             Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/computer_train_40000_shuffle.csv", number_imgs);
-            NeuralNetwork* net = network_create(784, 35, 10, 0.75f);
+            NeuralNetwork* net = network_create(784, 40, 10, 0.075f);
             network_train_batch_imgs(net, imgs, number_imgs);
             network_save(net, "computer_net");
             network_print(net);
