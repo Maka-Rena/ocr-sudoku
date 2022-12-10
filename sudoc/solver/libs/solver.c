@@ -3,7 +3,22 @@
 
 int isAvailable(int puzzle[], int row, int col, int num, int n)
 {
-    //ONLY N = 9 works
+    if (n == 16)
+    {
+        int rowStart = (row/4) * 4;
+        int colStart = (col/4) * 4;
+        int i;
+
+        for(i=0; i<n; ++i)
+        {
+            if (puzzle[row*n+i] == num) return 0;
+            if (puzzle[i*n+col] == num) return 0;
+            if (puzzle[(rowStart + (i%4))*n+(colStart + (i/4))] == num) return 0;
+        }
+        return 1;
+    }
+    else{
+        //ONLY N = 9 works
     int rowStart = (row/3) * 3;
     int colStart = (col/3) * 3;
     int i;
@@ -15,6 +30,7 @@ int isAvailable(int puzzle[], int row, int col, int num, int n)
         if (puzzle[(rowStart + (i%3))*n+(colStart + (i/3))] == num) return 0;
     }
     return 1;
+    }
 }
 
 int solveSudoku(int *sudok, int row, int col, int n)
