@@ -4,15 +4,23 @@
 ---
 
 ##### _This is an explanation on how to use our program:_
+*Run program*
+```
+make run
+# For UI
+make npm # If your are on EPITA's computers.
+make web
+make api
+```
 
 *View program tests:*
-```
+```sh
 make test
 ```
 
 *Clean all executables and .o files:*
-```
+```sh
 make clean
 ```
 
-The Maka Rena Team!
+Made with love by The Maka Rena Team!
