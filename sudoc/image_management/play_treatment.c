@@ -16,6 +16,7 @@
 #include "./include/resize.h"
 #include "./include/sobel.h"
 #include "./include/to_matrix.h"
+#include "./include/flood_fill.h"
 
 // Loads an image in a surface.
 // The format of the surface is SDL_PIXELFORMAT_RGB888.
@@ -64,10 +65,15 @@ int main(int argc, char** argv)
 	Kernel_Convolution_Sobel(surface);
     IMG_SavePNG(surface, "sobel.png");
 
+    princip(surface);
+    IMG_SavePNG(surface, "flood_fill.png");
+    
     Image *image = CV_SURFACE_TO_IMG(surface);
     if (image == NULL)
         errx(1, "Failed converting the surface to image");
 
+
+    
     //Hough Transform call
     int n = 0;
     int *lines = Hough_lines(image, 300, &n);
