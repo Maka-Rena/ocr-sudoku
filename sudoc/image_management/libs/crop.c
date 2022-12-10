@@ -35,7 +35,7 @@ void Clean_surface(SDL_Surface *surface)
     {
         for (int j = 0; j < w; j++)
         {
-			if (i>h/10 && i<9*h/10 && j>w/10 && j<9*w/10)
+			if (i>h/9 && i<8*h/9 && j>w/9 && j<8*w/9)
 				continue;
             pixels[i*w + j] = SDL_MapRGB(surface->format, 0,0,0);;
         }

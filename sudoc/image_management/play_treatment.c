@@ -122,22 +122,22 @@ int main(int argc, char** argv)
     int new_height = height/9;
     printf("New width: %d New height: %d",new_width,new_height);
     char file[7];
-    SDL_Surface* croped = SDL_CreateRGBSurface(0,new_width,new_height,32,0,0,0,0);
     for (int i = 0; i < 9; i++)
     {
         for (int j = 0; j < 9; j++)
         {
+            SDL_Surface* croped = SDL_CreateRGBSurface(0,new_width,new_height,32,0,0,0,0);
             SDL_FillRect(croped, NULL, SDL_MapRGB(croped->format, 0, 0, 0));
             croped_image(surface2,croped, grid[0]+j*new_width+i, grid[1]+i*new_height+i,grid[0]+(j+1)*new_width+i,grid[1]+(i+1)*new_height+i );
-            //croped = resize(croped, 28, 28);
             Clean_surface(croped);
+            croped = resize(croped, 28, 28);
             sprintf(file, "%d.png",9*i+j);
             IMG_SavePNG(croped, file);
+            SDL_FreeSurface(croped);
         }
     }
 
     // - Free the surface.
-    SDL_FreeSurface(croped);
 
     
     free(intersections);

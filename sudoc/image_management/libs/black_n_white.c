@@ -146,14 +146,14 @@ void blackandwhite(SDL_Surface* surface)
 
         if (((r+b+g)/3) >= th)
         {
-            pixels[count] = SDL_MapRGB(format, 255,255,255);
+            pixels[count] = SDL_MapRGB(format, 0,0,0);
         }
         else
         {
-            pixels[count] = SDL_MapRGB(format, 0, 0, 0);
+            pixels[count] = SDL_MapRGB(format, 255, 255, 255);
         }
         count++;
     }
 
-   thinning(pixels, format, w, h);
+   //thinning(pixels, format, w, h);
 }
