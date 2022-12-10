@@ -51,6 +51,10 @@ void parser (char* file_path, int* sudok)
                     case 'F':
                         sudok[n++] = 15;
                         break;
+
+                    case 'G':
+                        sudok[n++] = 16;
+                        break;
                     
                     default:
                         errx(EXIT_FAILURE, "Invalid character in file!");

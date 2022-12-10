@@ -1,5 +1,4 @@
 # Makefile
-
 CC := gcc
 CFLAGS := -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image` -Wno-unknown-pragmas
 LDFLAGS := -lm
@@ -76,9 +75,10 @@ clean-test:
 	${RM} ${TEST_OBJ}
 
 clean-web: 
-	@cd web/website/src/components/Upload && rm -rf process/
+	@cd web/website/src/components/Upload && rm process/*.png
 
 clean: clean-sudoc clean-test clean-web
 	${RM} -rf $(BUILD_DIR)
+	${RM} -rf neural_network/images/
 
 #End Makefile
