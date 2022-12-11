@@ -55,19 +55,19 @@ void play_neuralnetwork(int type, int N, int processed_sudoku[])
     NeuralNetwork* net = malloc(sizeof(NeuralNetwork));
     if (type == 0) //HANDWRITTEN
     {
-        net = network_load("../sudoc/neural_network/digits_recog_nn/testing_net");
+        net = network_load("./sudoc/neural_network/digits_recog_nn/testing_net");
     }
     else if (type == 1) //COMPUTER
     {
-        net = network_load("../sudoc/neural_network/digits_recog_nn/computer_net");
+        net = network_load("./sudoc/neural_network/digits_recog_nn/computer_net");
     }
     else{ // HEXA
-        net = network_load("../sudoc/neural_network/digits_recog_nn/computer_net_hexa");
+        net = network_load("./sudoc/neural_network/digits_recog_nn/computer_net_hexa");
     }
     for(int i = 0; i < N*N; i++)
     {
         char* path = malloc(sizeof(char)*100);
-        sprintf(path, "%i.png", i);
+        sprintf(path, "../images/%i.png", i);
         SDL_Surface *surface = Load_image2(path);
         Matrix *to_img = lower(surface);
         Image *my_img = malloc(sizeof(Image));
