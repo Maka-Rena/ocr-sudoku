@@ -48,7 +48,7 @@ build-test: $(TEST_OBJ)
 build-npm:
 	@nix-shell -p nodejs-18_x
 build-web:
-	@cd web/website/src/components/Upload/ && mkdir process && cd ../../../ && npm install && npm run start
+	@cd web/website/ && npm install && npm run start
 
 build-api:
 	@cd web/api/ && npm install && clear && node index.js
@@ -56,7 +56,6 @@ build-api:
 # RUN
 run: build
 	@clear
-	@cd $(BUILD_DIR)/
 
 test: build-test
 	@./$(BUILD_DIR)/$(EXEC_TEST)
