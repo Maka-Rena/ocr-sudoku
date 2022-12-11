@@ -1,22 +1,4 @@
-#include <err.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include "../libraries/matrix_lib/include/matrix.h"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include "./include/hough_transform.h"
-#include "./include/black_n_white.h"
-#include "./include/cell.h"
-#include "./include/contrast_light.h"
-#include "./include/crop_ia.h"
-#include "./include/crop.h"
-#include "./include/gaussian.h"
-#include "./include/grayscale.h"
-#include "./include/resize.h"
-#include "./include/sobel.h"
-#include "./include/to_matrix.h"
-#include "./include/flood_fill.h"
+#include "../include/play_treatment.h"
 
 // Loads an image in a surface.
 // The format of the surface is SDL_PIXELFORMAT_RGB888.
@@ -34,40 +16,33 @@ SDL_Surface* Load_image(const char* path)
     return res;
 }
 
-int main(int argc, char** argv)
+void play_treatment(char* path)
 {
-    if (argc == 1)
-        errx(EXIT_FAILURE, "%s", "no arg");
-
-    // Initializes the SDL.
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-        errx(EXIT_FAILURE, "%s", SDL_GetError());
-
     // - Create a surface from the colored image.
-    SDL_Surface* surface = Load_image(argv[1]);
+    SDL_Surface* surface = Load_image(path);
     if (surface == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
 
     // - Convert the surface into grayscale.
     Surface_To_Grayscale(surface);
-    IMG_SavePNG(surface, "grayscale.png");
+    //IMG_SavePNG(surface, "../web/website/src/components/Upload/process/1.png");
 
     // - Convert the surface into blurred surface
 	Kernel_Convolution(surface);
-    IMG_SavePNG(surface, "blurred.png");
+    //IMG_SavePNG(surface, "../web/website/src/components/Upload/process/2.png");
 
     contrast(surface);
-    IMG_SavePNG(surface, "contrast.png");
+    IMG_SavePNG(surface, "../web/website/src/components/Upload/process/1.png");
     blackandwhite(surface);
-    IMG_SavePNG(surface, "black_n_white.png");
+    IMG_SavePNG(surface, "../web/website/src/components/Upload/process/2.png");
     // - Convert the surface into sobel surface 
 	Kernel_Convolution_Sobel(surface);
-    IMG_SavePNG(surface, "sobel.png");
+    IMG_SavePNG(surface, "../web/website/src/components/Upload/process/3.png");
 
-    /*princip(surface);
-    IMG_SavePNG(surface, "flood_fill.png");*/
+    princip(surface);
+    IMG_SavePNG(surface, "../web/website/src/components/Upload/process/4.png");
     
-    Image *image = CV_SURFACE_TO_IMG(surface);
+    Images *image = CV_SURFACE_TO_IMG(surface);
     if (image == NULL)
         errx(1, "Failed converting the surface to image");
 
@@ -81,12 +56,13 @@ int main(int argc, char** argv)
         angle = angle - 90;
     else if (angle > 135)
         angle = angle - 180;
+    
     printf("Angle: %f",angle);
     Hough_draw_lines(image, image, merged, n, 2, CV_RGB(255, 0, 0));
 
     // - Save the image.
     surface = CV_IMG_TO_SURFACE(image);
-    IMG_SavePNG(surface, "lines.png");
+    //IMG_SavePNG(surface, "lines.png");
 
     //Find intersection points
     int nbintersections = 0;
@@ -99,7 +75,7 @@ int main(int argc, char** argv)
     }
     // - Save the image.
     surface = CV_IMG_TO_SURFACE(image);
-    IMG_SavePNG(surface, "intersections.png");
+    IMG_SavePNG(surface, "../web/website/src/components/Upload/process/5.png");
     
     //First free
     CV_FREE(&image);
@@ -107,7 +83,7 @@ int main(int argc, char** argv)
     free(merged);
     SDL_FreeSurface(surface);
     
-    SDL_Surface* surface2 = Load_image("black_n_white.png");
+    SDL_Surface* surface2 = Load_image("../web/website/src/components/Upload/process/2.png");
     if (surface == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
     //Find grid
@@ -142,5 +118,5 @@ int main(int argc, char** argv)
     
     free(intersections);
     free(grid);
-    return EXIT_SUCCESS;
+    return;
 }

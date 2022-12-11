@@ -13,7 +13,7 @@ typedef struct
     int h;
     int w;
     pixel_t *data;
-} Image;
+} Images;
 
 #define FREE(ptr)       \
     do                  \
@@ -34,19 +34,19 @@ typedef struct
 
 #define norm(x) min(max((x), 0), 1)
 
-void CV_FREE(Image **image);
-Image *CV_INIT(int channels, int height, int width);
-Image *CV_COPY(const Image *src);
-Image *CV_SURFACE_TO_IMG(SDL_Surface *surface);
-SDL_Surface *CV_IMG_TO_SURFACE(const Image *image);
+void CV_FREE(Images **image);
+Images *CV_INIT(int channels, int height, int width);
+Images *CV_COPY(const Images *src);
+Images *CV_SURFACE_TO_IMG(SDL_Surface *surface);
+SDL_Surface *CV_IMG_TO_SURFACE(const Images *image);
 Uint32 CV_RGB(Uint8 r, Uint8 g, Uint8 b);
 
-int *Hough_lines(const Image *src, int threshold, int *nlines);
+int *Hough_lines(const Images *src, int threshold, int *nlines);
 int *Hough_merge_lines(int *lines, int nlines, int threshold, int *n);
-Image *Hough_draw_point(const Image *src, Image *dst, int x, int y, int width, Uint32 color);
-Image *Hough_draw_line(const Image *src, Image *dst, int x1, int y1, int x2, int y2, int width, Uint32 color);
-Image *Hough_draw_lines(const Image *src, Image *dst, int *lines, int nlines, int weight, Uint32 color);
-Image *Hough_draw_circle(const Image *src, Image *dst, int x, int y, int r, int width, Uint32 color);
+Images *Hough_draw_point(const Images *src, Images *dst, int x, int y, int width, Uint32 color);
+Images *Hough_draw_line(const Images *src, Images *dst, int x1, int y1, int x2, int y2, int width, Uint32 color);
+Images *Hough_draw_lines(const Images *src, Images *dst, int *lines, int nlines, int weight, Uint32 color);
+Images *Hough_draw_circle(const Images *src, Images *dst, int x, int y, int r, int width, Uint32 color);
 
 float Find_orientation(int *lines, int nlines);
 

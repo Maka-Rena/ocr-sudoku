@@ -4,6 +4,9 @@
 #include <err.h>
 #include <string.h>
 #include "include/neural_network.h"
+#include "../../libraries/matrix_lib/include/matrix.h"
+#include "../../libraries/matrix_lib/include/ops.h"
+#include "include/activation.h"
 #include "include/load_and_save.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -26,14 +29,23 @@ Matrix *lower(SDL_Surface* surface)
         for (int j =0; j < surface->w;j++)
         { 
             Uint8 r,g,b;
-            float av = ((float)(r+g+b))/3;
             SDL_GetRGB(pixels[i*surface->w + j], format, &r, &g, &b);
-            //if(r == 255)
-            res->entries[i][j] = av;
-            //else
-            res->entries[i][j] = av;
+            // get value of pixel on scale 0-255
+            //float av = ((float)(r+g+b))/3.0;
+            float av = 0.3*r + 0.59*g + 0.11*b;
+            /*if (r == 0)
+            {
+                av = 0;
+            }
+            else
+            {
+                av = 255;
+            }*/
+            
+            res->entries[j][i] = av;
         }
     }
+    //Matrix* res2 = apply(sigmoid, res);
     return res;
 }
 
@@ -156,7 +168,6 @@ int main(int argc, char** argv)
         NeuralNetwork* net = network_load("computer_net");
         Matrix *to_img = lower(surface);
 
-        printf("heyho\n");
         Image *my_img = malloc(sizeof(Image));
         my_img->img_data = to_img;
         my_img->label = 6;
@@ -170,6 +181,57 @@ int main(int argc, char** argv)
           printf("predicted number = %i\n", matrix_argmax(res));
           printf("actual number = %i\n", imgs[5]->label);
           imgs_free(imgs, number_imgs);*/
+    }
+
+    if(strcmp((argv[1]), "process") == 0)
+    {
+        int processed_sudoku[81] = {0}; 
+        // for each image in directory load it and process it
+        for(int i = 0; i < 81; i++)
+        {
+            NeuralNetwork* net = network_load("computer_net");
+            char* path = malloc(sizeof(char)*100);
+            sprintf(path, "../images/%i.png", i);
+            SDL_Surface *surface = Load_image(path);
+            Matrix *to_img = lower(surface);
+            Image *my_img = malloc(sizeof(Image));
+            my_img->img_data = to_img;
+            Matrix *res = network_predict_img(net,my_img);
+            int number = matrix_argmax(res);
+            processed_sudoku[i] = number;
+            printf("predicted number = %i\n", number);
+            network_free(net);
+            img_free(my_img);
+            // save it in a csv file
+        }
+        // pretty print of array
+        /*for(int i = 0; i < 9; i++)
+        {
+            for(int j = 0; j < 9; j++)
+            {
+                printf("%i ", processed_sudoku[i*9+j]);
+            }
+            printf("\n");
+        }*/
+        // print array
+        for(int i = 0; i < 81; i++)
+        {
+            char j = '.';
+            if (processed_sudoku[i] == 0)
+            {
+                printf("%c,", j);
+            }
+            else
+            {
+                printf("%i,", processed_sudoku[i]);
+            }
+            if (i%9 == 8)
+            {
+                printf("\n");
+            }
+            
+        }
+
     }
     return 0;
 }
