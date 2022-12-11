@@ -55,6 +55,9 @@
 # Python files
 *.py
 
+images/
+
+
 # Kernel Module Compile Results
 *.mod*
 *.cmd
@@ -93,8 +96,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# MacOS
-.gitignore
 
 # Program
 uploads/
