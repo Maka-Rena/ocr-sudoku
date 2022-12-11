@@ -1,5 +1,4 @@
 #pragma once
-#define N 9
 #include <stdio.h>
 #include <stdlib.h>
 
