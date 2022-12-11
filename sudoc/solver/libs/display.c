@@ -39,7 +39,7 @@ void display_sudoku(int* sudok, int n)
 void extract_sudoku(int* sudok, int* sudokInitial, int max)
 {
     //Create a JSON file with an array of the solved sudoku with two colors for an initial number and a solved number
-    FILE *f = fopen("../web/website/src/components/Upload/process/solvedSudoku.json", "w");
+    FILE *f = fopen("../../../web/website/src/components/Upload/process/solvedSudoku.json", "w");
     if (f == NULL)
         errx(EXIT_FAILURE, "Error opening file!");
     fprintf(f, "{\n\t\"sudoku\": [\n");

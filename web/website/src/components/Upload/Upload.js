@@ -14,7 +14,7 @@ const Upload = () => {
     const [result, setResult] = useState([]);
     const [isHexa, setIsHexa] = useState(false);
 
-    const MAX_STEP = 4;
+    const MAX_STEP = 6;
 
     const handleChange = (e) => {
         setFilename(e.target.files[0].name);
@@ -49,7 +49,12 @@ const Upload = () => {
     const checkStep = () => {
         axios.get("http://localhost:3001/step?currentStep=" + step)
             .then(res => {
-                setStep(res.data.step);
+                if (res.data.step !== step + 1 && res.data.step !== step)
+                    setStep(step+1);
+                else{
+                    setStep(res.data.step);
+                }
+                console.log(step);
             })
             .catch(err => {
                 console.log(err);
@@ -62,6 +67,9 @@ const Upload = () => {
         }
         if (step === 3) {
             setProcessState(["⏳ -- Starting process...", "✅ -- Image loaded", "✅ -- Image processed", "⏳ -- Solving sudoku..."]);
+        }
+        if (step === 4) {
+            setProcessState(["⏳ -- Starting process...", "✅ -- Image loaded", "✅ -- Image processed", "✅ -- Sudoku solved", "⏳ -- Done"]);
         }
         if (step === MAX_STEP) {
             //Get JSON file
@@ -89,7 +97,7 @@ const Upload = () => {
 
     const doubleCheck = () => {
         try {
-            return require("./process/" + step.toString() + ".jpeg");
+            return require("./process/" + step.toString() + ".png");
         }
         catch (err) {
             console.log("Err : ", err);

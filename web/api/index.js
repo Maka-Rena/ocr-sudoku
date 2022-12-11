@@ -7,21 +7,19 @@ const fs = require("fs");
 app.use(express.json());
 //GET /?color1=red&color2=blue
 
-function process (filename) {
-  // exec(`cd ../ && ls`, (error, stdout, stderr) => {
-  //   if (error) {
-  //     //console.error(`error: ${error.message}`);
-  //     res.send('KO');
-  //     return;
-  //   }
-
-  //   /*if (stderr) {
-  //     console.error(`stderr: ${stderr}`);
-  //     return;
-  //   }*/
-
-  //   console.log(`stdout:\n${stdout}`);
-  // });
+function process (filename, type, n) {
+  console.log("./build/sudoc ./pictures/" + filename + ' ' + n + ' ' + type);
+  exec('cd ../../ && ./build/sudoc ./pictures/' + filename + ' ' + n + ' ' + type, (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+  });
 }
 
 app.get("/", (req, res) => {
@@ -30,7 +28,9 @@ app.get("/", (req, res) => {
   console.log("FILE : " + filename);
   console.log("Is handwritted : " + handwritted);
   console.log("IS Hexa : " + hexa);
-  process(filename);
+  let n = (hexa === "true") ? 16 : 9;
+  let type = (handwritted === "true") ? 0 : (hexa === "true" ) ? 2 : 1;
+  process(filename, type, n);
   res.send("OK");
   res.end();
 });
@@ -48,7 +48,7 @@ app.get("/step", (req, res) => {
   else{
     if (fs.existsSync("../website/src/components/Upload/process/solvedSudoku.json"))
     {
-      step = 4;
+      step = 6;
     }
   }
   console.log("STEP sent: " + step);
