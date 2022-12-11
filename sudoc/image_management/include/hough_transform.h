@@ -50,7 +50,7 @@ Images *Hough_draw_circle(const Images *src, Images *dst, int x, int y, int r, i
 
 float Find_orientation(int *lines, int nlines);
 
-int *Compute_intersections(int *lines, int nlines, int *nintersection, int width, int height);
+int *Compute_intersections(int *lines, int nlines, int *nintersection, int width, int height, int ymin, int ymax);
 int *Sort_intersections(int *intersections, int nintersections);
 int *Find_intersections(int *lines, int nlines, int *nintersection);
 int *Get_grid(int *intersections, int nintersections);

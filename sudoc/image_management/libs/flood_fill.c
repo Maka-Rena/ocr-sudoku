@@ -162,7 +162,7 @@ void deleting(SDL_Surface* surface)
     SDL_UnlockSurface(surface);
 }
 
-void princip(SDL_Surface* surface)
+int *princip(SDL_Surface* surface)
 {
     SDL_LockSurface(surface);
     Uint32 *pixels = surface->pixels;
@@ -195,7 +195,7 @@ void princip(SDL_Surface* surface)
     }  
     Uint32 finalcolor = SDL_MapRGB(format, 255, 0, 0);
     flood_fill_final(pixels, format, finalcolor, coordinate%w, coordinate/w, w, h); 
-    //int* coordinates = get_coordinates(pixels, finalcolor, length);
+    int* coordinates = get_coordinates(pixels, finalcolor, length);
     //printf("First: %i, Last: %i\n", coordinates[0], coordinates[1]);
     
     //bring back the white pixels instead of the blue ones
@@ -203,4 +203,5 @@ void princip(SDL_Surface* surface)
     deleting(surface);
     //IMG_SavePNG(surface, "result.png");
     SDL_UnlockSurface(surface);
+    return coordinates;
 }
