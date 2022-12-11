@@ -32,18 +32,18 @@ void play_treatment(char* path)
     //IMG_SavePNG(surface, "../web/website/src/components/Upload/process/2.png");
 
     contrast(surface);
-    IMG_SavePNG(surface, "./web/website/src/components/Upload/1.png");
+    IMG_SavePNG(surface, "./web/website/src/components/Upload/process/1.png");
     blackandwhite(surface);
-    IMG_SavePNG(surface, "./web/website/src/components/Upload/2.png");
+    IMG_SavePNG(surface, "./web/website/src/components/Upload/process/2.png");
     // - Convert the surface into sobel surface 
 	Kernel_Convolution_Sobel(surface);
-    IMG_SavePNG(surface, "./web/website/src/components/Upload/3.png");
+    IMG_SavePNG(surface, "./web/website/src/components/Upload/process/3.png");
 
     int* coordinates;
     coordinates = princip(surface);
     int ymin = coordinates[0] / surface->w;
     int ymax = coordinates[1] / surface->w;
-    IMG_SavePNG(surface, "./web/website/src/components/Upload/4.png");
+    IMG_SavePNG(surface, "./web/website/src/components/Upload/process/4.png");
     
     Images *image = CV_SURFACE_TO_IMG(surface);
     if (image == NULL)
@@ -78,7 +78,7 @@ void play_treatment(char* path)
     }
     // - Save the image.
     surface = CV_IMG_TO_SURFACE(image);
-    IMG_SavePNG(surface, "./web/website/src/components/Upload/5.png");
+    IMG_SavePNG(surface, "./web/website/src/components/Upload/process/5.png");
     
     //First free
     CV_FREE(&image);
@@ -86,7 +86,7 @@ void play_treatment(char* path)
     free(merged);
     SDL_FreeSurface(surface);
     
-    SDL_Surface* surface2 = Load_image("./web/website/src/components/Upload/2.png");
+    SDL_Surface* surface2 = Load_image("./web/website/src/components/Upload/process/2.png");
     if (surface == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
     //Find grid
