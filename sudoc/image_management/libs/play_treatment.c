@@ -117,7 +117,7 @@ void play_treatment(char* path)
     int new_width = width/9;
     int new_height = height/9;
     printf("New width: %d New height: %d",new_width,new_height);
-    char file[7];
+    char file[38];
     for (int i = 0; i < 9; i++)
     {
         for (int j = 0; j < 9; j++)
@@ -127,7 +127,8 @@ void play_treatment(char* path)
             croped_image(surface2,croped, grid[0]+j*new_width+i, grid[1]+i*new_height+i,grid[0]+(j+1)*new_width+i,grid[1]+(i+1)*new_height+i );
             Clean_surface(croped);
             croped = resize(croped, 28, 28);
-            sprintf(file, "%d.png",9*i+j);
+            sprintf(file, "./sudoc/neural_network/images/%d.png",9*i+j);
+            //sprintf(file, "./build/%d.png",9*i+j);
             IMG_SavePNG(croped, file);
             SDL_FreeSurface(croped);
         }
