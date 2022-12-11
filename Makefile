@@ -37,7 +37,6 @@ all: run
 # BUILD
 build: $(OBJ)
 	@mkdir -p $(BUILD_DIR)
-	@mkdir -p ./sudoc/neural_network/images/
 	@$(CC) -o $(BUILD_DIR)/$(EXEC) $^ $(LDFLAGS) $(LDLIBS)
 
 build-test: $(TEST_OBJ)
@@ -55,7 +54,7 @@ build-api:
 # RUN
 run: build
 	@clear
-	@cd $(BUILD_DIR)
+	@cd $(BUILD_DIR)/
 
 test: build-test
 	@./$(BUILD_DIR)/$(EXEC_TEST)
@@ -76,10 +75,9 @@ clean-test:
 	${RM} ${TEST_OBJ}
 
 clean-web: 
-	@cd web/website/src/components/Upload && rm -f process/*.png
+	@cd web/website/src/components/Upload && rm -rf process/
 
 clean: clean-sudoc clean-test clean-web
 	${RM} -rf $(BUILD_DIR)
-	${RM} -rf sudoc/neural_network/images/
 
 #End Makefile

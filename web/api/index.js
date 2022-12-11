@@ -25,10 +25,11 @@ function process (filename) {
 }
 
 app.get("/", (req, res) => {
-  const { filename, handwritted } = req.query;
+  const { filename, handwritted, hexa } = req.query;
   res.header("Access-Control-Allow-Origin", "*");
   console.log("FILE : " + filename);
   console.log("Is handwritted : " + handwritted);
+  console.log("IS Hexa : " + hexa);
   process(filename);
   res.send("OK");
   res.end();
