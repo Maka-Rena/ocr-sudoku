@@ -15,6 +15,7 @@ SRC :=	${wildcard ./sudoc/solver/libs/*.c} \
 		${wildcard ./sudoc/libraries/data_set_lib/libs/*.c} \
 		${wildcard ./sudoc/neural_network/digits_recog_nn/libs/*.c} \
 		${wildcard ./sudoc/rotate_image/libs/*.c} \
+		./sudoc/neural_network/digits_recog_nn/play_neuralnetwork.c \
 		./sudoc/main.c
 
 TEST_SRC := ${wildcard ./sudoc/solver/libs/*.c} \
@@ -37,6 +38,7 @@ all: run
 # BUILD
 build: $(OBJ)
 	@mkdir -p $(BUILD_DIR)
+	@mkdir -p web/website/src/components/Upload/process
 	@$(CC) -o $(BUILD_DIR)/$(EXEC) $^ $(LDFLAGS) $(LDLIBS)
 
 build-test: $(TEST_OBJ)
