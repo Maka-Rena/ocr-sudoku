@@ -12,6 +12,7 @@ const Upload = () => {
     const [processState, setProcessState] = useState(["⏳ -- Starting process..."]);
     const [isHandwrite, setIsHandwrite] = useState(false);
     const [result, setResult] = useState([]);
+    const [isHexa, setIsHexa] = useState(false);
 
     const MAX_STEP = 4;
 
@@ -21,8 +22,15 @@ const Upload = () => {
     }
 
     const handleSubmit = async () => {
+        if (filename === "")
+        {  
+            alert("Please select a file");
+            return;
+        }
         console.log("FILE : ", filename);
-        axios.get("http://localhost:3001/?filename=" + filename + "&handwritted=" + (isHandwrite === true).toString(), {
+        axios.get("http://localhost:3001/?filename=" + filename
+            + "&handwritted=" + (isHandwrite === true).toString()
+            + "&hexa=" + (isHexa === true).toString(), {
             progressEvent: (e) => {
                 setProgress(Math.round((e.loaded * 100) / e.total));
             }
@@ -103,6 +111,8 @@ const Upload = () => {
                     <input type="file" id="file" accept="image/*" class="upload-input" onChange={handleChange} />
                     <label for="handwriteCheck" style={{marginTop: 30}}>Is number handwritten?</label>
                     <input type="checkbox" id="handwriteCheck" name="handwritting" value={isHandwrite} onChange={() => setIsHandwrite(!isHandwrite)} />
+                    <label for="hexaCheck" style={{marginTop: 30}}>Is hexa number?</label>
+                    <input type="checkbox" id="hexaCheck" name="hexa" value={isHexa} onChange={() => setIsHexa(!isHexa)} />
                     {/* eslint-disable-next-line */}
                     <a class="upload-file-submit" onClick={() => handleSubmit()}>Process</a>
                     <div class="upload-progress-container">
