@@ -108,6 +108,76 @@ void play_neuralnetwork(int type, int N, int processed_sudoku[])
         processed_sudoku[77]= 6;
         processed_sudoku[79]= 3;
     }
+    /*if(type == 2)
+      {
+      for(int i = 0; i < 256; i++)
+      processed_sudoku[i] = 0;
+      processed_sudoku[1] = 6;
+      processed_sudoku[4] = 14;
+      processed_sudoku[10] = 2;
+      processed_sudoku[12] = 15;
+
+      processed_sudoku[18] = 11;
+      processed_sudoku[22] = 12;
+      processed_sudoku[23] = 3;
+      processed_sudoku[26] = 1;
+
+      processed_sudoku[28] = 8;
+      processed_sudoku[30] = 16;
+      processed_sudoku[37] = 5;
+      processed_sudoku[39] = 9;
+
+      processed_sudoku[45] = 2;
+      processed_sudoku[47] = 10;
+
+      processed_sudoku[10] = 2;
+      processed_sudoku[12] = 15;
+
+
+
+
+      }*/
+    if(type == 2)
+    {
+        for(int i = 0; i < 81; i++)
+            processed_sudoku[i]=0;
+        processed_sudoku[1] = 2;
+        processed_sudoku[6] = 6;
+        processed_sudoku[8] = 9;
+        processed_sudoku[9] = 8;
+        processed_sudoku[10] = 5;
+        processed_sudoku[11] = 7;
+        processed_sudoku[13] =  6;
+        processed_sudoku[14] = 4;
+        processed_sudoku[15] = 2;
+        processed_sudoku[19] = 9;
+        processed_sudoku[23] = 1;
+        processed_sudoku[28] = 1;
+        processed_sudoku[30] = 6;
+        processed_sudoku[31] = 5;
+        processed_sudoku[33] = 3;
+        processed_sudoku[38] = 8;
+        processed_sudoku[39] = 1;
+        processed_sudoku[41] = 3;
+        processed_sudoku[42] = 5;
+        processed_sudoku[47] = 3;
+        processed_sudoku[49] = 2;
+        processed_sudoku[50] = 9;
+        processed_sudoku[52] = 8;
+        processed_sudoku[57] = 4;
+        processed_sudoku[61] = 6;
+        processed_sudoku[65] = 2;
+        processed_sudoku[66] = 8;
+        processed_sudoku[67] = 7;
+        processed_sudoku[69] = 1;
+        processed_sudoku[70] = 3;
+        processed_sudoku[71] = 5;
+        processed_sudoku[72] = 1;
+        processed_sudoku[74] = 6;
+        processed_sudoku[79] = 2;
+    }
+
+
 
     network_free(net);
     return;
