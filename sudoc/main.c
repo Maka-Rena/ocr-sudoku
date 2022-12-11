@@ -8,6 +8,7 @@
 #include "./libraries/matrix_lib/include/matrix.h"
 #include "./libraries/matrix_lib/include/ops.h"
 #include "./libraries/data_set_lib/include/image.h"
+#include "./image_management/include/play_treatment.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -15,6 +16,7 @@ int main()
 {
     printf("HELLO WORD!\n");
     // NEED TO CALL PLAY TREATMENT
+    play_treatment("./pictures/image_01.jpeg");
     // NEED TO CALL SOLVER
     return 0;
 }

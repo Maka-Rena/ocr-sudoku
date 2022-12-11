@@ -4,7 +4,7 @@ const double PI = 3.141592653589793;
 
 /// @brief Free an image and set the pointer to NULL. It has double free protection.
 /// @param image The image to free.
-void CV_FREE(Image **image)
+void CV_FREE(Images **image)
 {
     if (*image != NULL)
     {
@@ -13,9 +13,9 @@ void CV_FREE(Image **image)
     }
 }
 
-Image *CV_INIT(int channels, int height, int width)
+Images *CV_INIT(int channels, int height, int width)
 {
-    Image *image = malloc(sizeof(Image));
+    Images *image = malloc(sizeof(Images));
 
     image->c = channels;
     image->w = width;
@@ -27,10 +27,10 @@ Image *CV_INIT(int channels, int height, int width)
     return image;
 }
 
-Image *CV_COPY(const Image *src)
+Images *CV_COPY(const Images *src)
 {
 
-    Image *copy = CV_INIT(src->c, src->h, src->w);
+    Images *copy = CV_INIT(src->c, src->h, src->w);
 
     memcpy(copy->data, src->data, src->c * src->h * src->w * sizeof(pixel_t));
 
@@ -40,7 +40,7 @@ Image *CV_COPY(const Image *src)
 /// @brief Convert an SDL_Surface to an Image.
 /// @param surface The SDL_Surface to convert.
 /// @return The new image.
-Image *CV_SURFACE_TO_IMG(SDL_Surface *surface)
+Images *CV_SURFACE_TO_IMG(SDL_Surface *surface)
 {
     SDL_LockSurface(surface);
 
@@ -49,7 +49,7 @@ Image *CV_SURFACE_TO_IMG(SDL_Surface *surface)
 
     SDL_PixelFormat *format = surface->format;
     Uint32 *pixels = surface->pixels;
-    Image *image = CV_INIT(3, h, w);
+    Images *image = CV_INIT(3, h, w);
 
     for (int i = 0; i < h; i++)
     {
@@ -73,7 +73,7 @@ Image *CV_SURFACE_TO_IMG(SDL_Surface *surface)
 /// @brief Convert an Image to an SDL_Surface.
 /// @param image The image to convert.
 /// @return The new SDL_Surface.
-SDL_Surface *CV_IMG_TO_SURFACE(const Image *image)
+SDL_Surface *CV_IMG_TO_SURFACE(const Images *image)
 {
 
     SDL_Surface *surface = SDL_CreateRGBSurface(0, image->w, image->h, 32, 0, 0, 0, 0);
@@ -121,7 +121,7 @@ SDL_Surface *CV_IMG_TO_SURFACE(const Image *image)
 /// @param threshold The threshold value, representing the minimum number of intersections to detect a line
 /// @param nlines The number of lines that will be returned.
 /// @return An array of lines where 2n is rho and 2n+1 is theta.
-int *Hough_lines(const Image *src, int threshold, int *nlines)
+int *Hough_lines(const Images *src, int threshold, int *nlines)
 {
     *nlines = 0;
 
@@ -265,7 +265,7 @@ Uint32 CV_RGB(Uint8 r, Uint8 g, Uint8 b)
     return color | r << 16 | g << 8 | b;
 }
 
-Image *Hough_draw_point(const Image *src, Image *dst, int x, int y, int width, Uint32 color)
+Images *Hough_draw_point(const Images *src, Images *dst, int x, int y, int width, Uint32 color)
 {
     if (src == NULL)
         errx(1, "Hough_draw_point: src is NULL");
@@ -291,7 +291,7 @@ Image *Hough_draw_point(const Image *src, Image *dst, int x, int y, int width, U
     return dst;
 }
 
-Image *Hough_draw_line(const Image *src, Image *dst, int x1, int y1, int x2, int y2, int width, Uint32 color)
+Images *Hough_draw_line(const Images *src, Images *dst, int x1, int y1, int x2, int y2, int width, Uint32 color)
 {
 
     int dx = abs(x2 - x1);
@@ -333,7 +333,7 @@ Image *Hough_draw_line(const Image *src, Image *dst, int x1, int y1, int x2, int
 /// @param weight The weight of the lines
 /// @param color The color of the lines
 /// @return The destination image
-Image *Hough_draw_lines(const Image *src, Image *dst, int *lines, int nlines, int weight, Uint32 color)
+Images *Hough_draw_lines(const Images *src, Images *dst, int *lines, int nlines, int weight, Uint32 color)
 {
 
     for (int i = 0; i < nlines; i++)
@@ -374,7 +374,7 @@ Image *Hough_draw_lines(const Image *src, Image *dst, int *lines, int nlines, in
 /// @param width The width of the circle
 /// @param color The color of the circle
 /// @return
-Image *Hough_draw_circle(const Image *src, Image *dst, int x, int y, int r, int width, Uint32 color)
+Images *Hough_draw_circle(const Images *src, Images *dst, int x, int y, int r, int width, Uint32 color)
 {
     int f = 1 - r;
     int ddF_x = 1;
