@@ -447,7 +447,7 @@ float Find_orientation(int *lines, int nlines)
 /// @param nlines Number of lines
 /// @param nintersection Number of intersections
 /// @return Array of intersections where 2n and 2n+1 are x and y coordinates
-int *Compute_intersections(int *lines, int nlines, int *nintersection, int width, int height)
+int *Compute_intersections(int *lines, int nlines, int *nintersection, int width, int height, int ymin, int ymax)
 {
     int *intersection = calloc(nlines * nlines * 2,sizeof(int));
 
@@ -473,7 +473,7 @@ int *Compute_intersections(int *lines, int nlines, int *nintersection, int width
 
             float x = (d * rho1 - b * rho2) / det;
             float y = (-c * rho1 + a * rho2) / det;
-            if (x <= 0 || y <= 0 || x >= width || y >= height)
+            if (x <= 0 || y <= ymin || x >= width || y >= ymax)
                 continue;
             intersection[j * 2] = (int)x;
             intersection[j * 2 + 1] = (int)y;

@@ -16,4 +16,4 @@ int* get_coordinates(Uint32 *pixels, Uint32 color, int len);
 void bringing_back(SDL_Surface *image);
 void deleting(SDL_Surface* surface);
 
-void princip(SDL_Surface* surface);
+int *princip(SDL_Surface* surface);
