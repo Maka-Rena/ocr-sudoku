@@ -122,8 +122,8 @@ int threshold(Uint32* pixels, int length, SDL_PixelFormat* format)
 
 void blackandwhite(SDL_Surface* surface)
 {
-    int w = 0;
-    int h = 0;
+    //int w = 0;
+    //int h = 0;
     int length = surface->w * surface->h;
 
  
