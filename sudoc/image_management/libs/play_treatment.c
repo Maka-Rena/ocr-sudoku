@@ -25,22 +25,22 @@ void play_treatment(char* path)
 
     // - Convert the surface into grayscale.
     Surface_To_Grayscale(surface);
-    IMG_SavePNG(surface, "grayscale.png");
+    //IMG_SavePNG(surface, "../web/website/src/components/Upload/process/1.png");
 
     // - Convert the surface into blurred surface
 	Kernel_Convolution(surface);
-    IMG_SavePNG(surface, "blurred.png");
+    //IMG_SavePNG(surface, "../web/website/src/components/Upload/process/2.png");
 
     contrast(surface);
-    IMG_SavePNG(surface, "contrast.png");
+    IMG_SavePNG(surface, "../web/website/src/components/Upload/process/1.png");
     blackandwhite(surface);
-    IMG_SavePNG(surface, "black_n_white.png");
+    IMG_SavePNG(surface, "../web/website/src/components/Upload/process/2.png");
     // - Convert the surface into sobel surface 
 	Kernel_Convolution_Sobel(surface);
-    IMG_SavePNG(surface, "sobel.png");
+    IMG_SavePNG(surface, "../web/website/src/components/Upload/process/3.png");
 
-    /*princip(surface);
-    IMG_SavePNG(surface, "flood_fill.png");*/
+    princip(surface);
+    IMG_SavePNG(surface, "../web/website/src/components/Upload/process/4.png");
     
     Images *image = CV_SURFACE_TO_IMG(surface);
     if (image == NULL)
@@ -62,7 +62,7 @@ void play_treatment(char* path)
 
     // - Save the image.
     surface = CV_IMG_TO_SURFACE(image);
-    IMG_SavePNG(surface, "lines.png");
+    //IMG_SavePNG(surface, "lines.png");
 
     //Find intersection points
     int nbintersections = 0;
@@ -75,7 +75,7 @@ void play_treatment(char* path)
     }
     // - Save the image.
     surface = CV_IMG_TO_SURFACE(image);
-    IMG_SavePNG(surface, "intersections.png");
+    IMG_SavePNG(surface, "../web/website/src/components/Upload/process/5.png");
     
     //First free
     CV_FREE(&image);
@@ -83,7 +83,7 @@ void play_treatment(char* path)
     free(merged);
     SDL_FreeSurface(surface);
     
-    SDL_Surface* surface2 = Load_image("black_n_white.png");
+    SDL_Surface* surface2 = Load_image("../web/website/src/components/Upload/process/2.png");
     if (surface == NULL)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
     //Find grid
