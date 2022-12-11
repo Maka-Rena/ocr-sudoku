@@ -39,6 +39,10 @@ void play_treatment(char* path)
 	Kernel_Convolution_Sobel(surface);
     IMG_SavePNG(surface, "./web/website/src/components/Upload/process/3.png");
 
+    SDL_Surface* surface2 = Load_image("./web/website/src/components/Upload/process/2.png");
+    if (surface == NULL)
+        errx(EXIT_FAILURE, "%s", SDL_GetError());
+
     int* coordinates;
     coordinates = princip(surface);
     int ymin = coordinates[0] / surface->w;
@@ -59,7 +63,22 @@ void play_treatment(char* path)
         angle = angle - 90;
     else if (angle > 135)
         angle = angle - 180;
-    
+    if (angle != 0)
+    {   
+        SDL_Surface *rotated = SDL_CreateRGBSurface(0, surface->w, surface->h, 32, 0, 0, 0, 0);
+        SDL_FillRect(rotated, NULL, SDL_MapRGB(rotated->format, 0, 0, 0));
+        rotate_image(surface, rotated, angle);
+        image = CV_SURFACE_TO_IMG(rotated);
+        if (image == NULL)
+            errx(1, "Failed converting the surface to image");
+        SDL_Surface *rotated2 = SDL_CreateRGBSurface(0, surface2->w, surface2->h, 32, 0, 0, 0, 0);
+        SDL_FillRect(rotated2, NULL, SDL_MapRGB(rotated2->format, 0, 0, 0));
+        rotate_image(surface2, rotated2, angle);
+        surface2 = rotated2;
+        //Hough Transform call
+        lines = Hough_lines(image, 300, &n);
+        merged = Hough_merge_lines(lines, n, 35, &n);
+    }
     printf("Angle: %f",angle);
     Hough_draw_lines(image, image, merged, n, 2, CV_RGB(255, 0, 0));
 
@@ -86,9 +105,7 @@ void play_treatment(char* path)
     free(merged);
     SDL_FreeSurface(surface);
     
-    SDL_Surface* surface2 = Load_image("./web/website/src/components/Upload/process/2.png");
-    if (surface == NULL)
-        errx(EXIT_FAILURE, "%s", SDL_GetError());
+    
     //Find grid
     int *grid = Get_grid(intersections, nbintersections);
     printf("Grid: %d %d %d %d",grid[0], grid[1], grid[2], grid[3]);

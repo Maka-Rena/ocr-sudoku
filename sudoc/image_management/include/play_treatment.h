@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "../../libraries/matrix_lib/include/matrix.h"
+#include "../../rotate_image/include/rotate.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "./hough_transform.h"
