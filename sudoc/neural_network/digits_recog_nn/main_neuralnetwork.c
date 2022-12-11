@@ -62,7 +62,7 @@ int main(int argc, char** argv)
             int number_imgs = 60000;
             Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/mnist_train.csv", number_imgs);
             NeuralNetwork* net = network_create(784, 30, 10, 0.06f);
-            network_train_batch_imgs(net, imgs, number_imgs);
+            network_train_batch_imgs(net, imgs, number_imgs,10);
             network_save(net, "testing_net");
             network_print(net);
             
@@ -75,8 +75,21 @@ int main(int argc, char** argv)
             int number_imgs = 39900;
             Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/computer_train_40000_shuffle.csv", number_imgs);
             NeuralNetwork* net = network_create(784, 40, 10, 0.075f);
-            network_train_batch_imgs(net, imgs, number_imgs);
+            network_train_batch_imgs(net, imgs, number_imgs,10);
             network_save(net, "computer_net");
+            network_print(net);
+            
+            imgs_free(imgs,number_imgs);
+            network_free(net);
+
+        }
+        if(strcmp((argv[2]), "hexa") == 0)
+        {
+            int number_imgs = 62700;
+            Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/computer_train_hexa_shuffle.csv", number_imgs);
+            NeuralNetwork* net = network_create(784, 25, 17, 0.15f);
+            network_train_batch_imgs(net, imgs, number_imgs,17);
+            network_save(net, "computer_net_hexa");
             network_print(net);
             
             imgs_free(imgs,number_imgs);
@@ -118,6 +131,23 @@ int main(int argc, char** argv)
 
 
         }
+
+        else if(strcmp((argv[2]), "hexa") == 0)
+        {
+            int number_imgs = 30500;
+            Image** imgs = csv_to_imgs("../../libraries/data_set_lib/DataSet/computer_test_hexa_shuffle.csv", number_imgs);
+            NeuralNetwork* net = network_load("computer_net_hexa");
+            printf("On est ok !\n");
+            double score = network_predict_imgs(net, imgs, number_imgs);
+
+            printf("Score for hexa characters : %1.5f\n", score);
+            
+            imgs_free(imgs,number_imgs);
+            network_free(net);
+
+
+        }
+
     }
 
     if(strcmp((argv[1]), "test") == 0)
