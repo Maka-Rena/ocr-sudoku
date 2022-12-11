@@ -114,7 +114,7 @@ void network_train(NeuralNetwork* net, Matrix* input, Matrix* output)
     matrix_free(hidden_errors);
 }
 
-void network_train_batch_imgs(NeuralNetwork* net, Image** imgs, int batch_size) 
+void network_train_batch_imgs(NeuralNetwork* net, Image** imgs, int batch_size,int sudok_type) 
 {
     for(int j = 0 ; j < 10; j++) // 10 epochs
     {
@@ -128,7 +128,7 @@ void network_train_batch_imgs(NeuralNetwork* net, Image** imgs, int batch_size)
             }
             Image* cur_img = imgs[i];
             Matrix* img_data = matrix_flatten(cur_img->img_data, 0); // 0 = flatten to column vector
-            Matrix* output = matrix_create(10, 1);
+            Matrix* output = matrix_create(sudok_type, 1);
             output->entries[cur_img->label][0] = 1; // Setting the result
             network_train(net, img_data, output);
             matrix_free(output);

@@ -15,7 +15,7 @@ typedef struct{
 
 NeuralNetwork* network_create(int input, int hiddden, int output, double lr);
 void network_train(NeuralNetwork* net, Matrix* input_data, Matrix* output_data);
-void network_train_batch_imgs(NeuralNetwork* net, Image** imgs, int batch_size);
+void network_train_batch_imgs(NeuralNetwork* net, Image** imgs, int batch_size, int sudok_type);
 Matrix* network_predict_img(NeuralNetwork* net, Image* img);
 double network_predict_imgs(NeuralNetwork* net, Image** imgs, int n);
 Matrix* network_predict(NeuralNetwork* net, Matrix* input_data);
