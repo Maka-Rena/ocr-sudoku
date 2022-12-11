@@ -12,11 +12,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main()
+int main(int argc, char **argv)
 {
-    printf("HELLO WORD!\n");
+    if (argc != 2)
+        errx(1, "Usage: %s <image_path>\n", argv[0]);
+    
+    printf("STARTING PROGRAM\n");
     // NEED TO CALL PLAY TREATMENT
-    play_treatment("./pictures/image_01.jpeg");
+    play_treatment(argv[1]);
     // NEED TO CALL SOLVER
     return 0;
 }

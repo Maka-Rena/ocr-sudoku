@@ -16,7 +16,7 @@ SDL_Surface* Load_image(const char* path)
     return res;
 }
 
-void play_treatment( char* path)
+void play_treatment(char* path)
 {
     // - Create a surface from the colored image.
     SDL_Surface* surface = Load_image(path);
@@ -42,7 +42,7 @@ void play_treatment( char* path)
     /*princip(surface);
     IMG_SavePNG(surface, "flood_fill.png");*/
     
-    Image *image = CV_SURFACE_TO_IMG(surface);
+    Images *image = CV_SURFACE_TO_IMG(surface);
     if (image == NULL)
         errx(1, "Failed converting the surface to image");
 
@@ -118,5 +118,5 @@ void play_treatment( char* path)
     
     free(intersections);
     free(grid);
-    return EXIT_SUCCESS;
+    return;
 }
